@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
 
     avatar: {
         type: String,
-        default: 'https://res.cloudinary.com/jettng/image/upload/v1622553229/jgram%202.0/default_avatar.png'
+        default: 'https://res.cloudinary.com/jettng/image/upload/v1622987266/jgram%202.0/default.png'
     },
 
     role: {

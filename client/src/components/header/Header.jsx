@@ -8,8 +8,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../redux/actions/authAction';
-import { GLOBALTYPES } from '../redux/actions/globalTypes';
+import { logout } from '../../redux/actions/authAction';
+import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 import Avatar from './Avatar';
 
 const Header = () => {
@@ -17,7 +17,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const { pathname } = useLocation();
 
-    const isActive = (pn, id) => {
+    const isActive = (pn) => {
         if (pathname === pn) {
             return true;
         }
@@ -26,31 +26,31 @@ const Header = () => {
     const navLinks = [
         { 
             label: 'Home', 
-            icon: <HomeOutlinedIcon id="Home" color={isActive('/', 'Home') ? 'primary' : ''} />, 
+            icon: <HomeOutlinedIcon id="Home" color={isActive('/') ? 'primary' : ''} />, 
             path: '/' 
         },
         
         { 
             label: 'Message',
-            icon: <QuestionAnswerOutlinedIcon id="Message" color={isActive('/message', 'Message') ? 'primary' : ''} />, 
+            icon: <QuestionAnswerOutlinedIcon id="Message" color={isActive('/message') ? 'primary' : ''} />, 
             path: '/message' 
         },
         
         { 
             label: 'Discover', 
-            icon: <ExploreOutlinedIcon id="Discover" color={isActive('/discover', 'Discover') ? 'primary' : ''} />, 
+            icon: <ExploreOutlinedIcon id="Discover" color={isActive('/discover') ? 'primary' : ''} />, 
             path: '/discover' 
         },
         
         { 
             label: 'Notify', 
-            icon: <FavoriteBorderOutlinedIcon id="Notify" color={isActive('/notify', 'Notify') ? 'primary' : ''} />, 
+            icon: <FavoriteBorderOutlinedIcon id="Notify" color={isActive('/notify') ? 'primary' : ''} />, 
             path: '/notify' 
         },
     ]
     
     return (
-        <div>
+        <div className="">
             <nav className="flex items-center justify-between navbar navbar-expand-lg">
                 <Link to="/">
                     <h1 className="p-0 font-bold uppercase navbar-brand hover:text-black focus:text-black">jGram</h1>

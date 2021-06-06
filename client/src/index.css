@@ -37,3 +37,7 @@ code {
     margin: auto;
     min-height: 100vh;
 }
+
+.dropdown-toggle::after {
+    display: none;
+}
