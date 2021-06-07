@@ -3,6 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { register } from '../redux/actions/authAction';
 
+import TextField from '@material-ui/core/TextField';
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, FormHelperText } from '@material-ui/core';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 const Register = () => {
     const { authReducer, alertReducer } = useSelector(state => state);
     const history = useHistory();
@@ -32,81 +37,109 @@ const Register = () => {
     }
 
     return (
-        <div className="flex items-center justify-center w-full min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center w-full h-screen min-h-screen bg-gray-50">
             <form onSubmit={handleSubmit} className="max-w-sm px-4 bg-white border">
                 <img src="jgramLogo.png" alt="" className="w-full max-w-xs m-auto" />
                 
                 <div className="form-group">
-                    <label htmlFor="fullname">Full Name</label>
-                    <input type="text" className="form-control" id="fullname" name="fullname"
-                        onChange={handleChangeInput} value={fullname} 
-                        style={{ background: `${alertReducer.fullname ? `#fd2d6a14` : ''}` }}
+                    <TextField
+                        name="fullname"
+                        id="fullname"
+                        label="Full Name"
+                        variant="outlined"
+                        onChange={handleChangeInput} 
+                        value={fullname}
+                        className="w-full"
+                        error={alertReducer.fullname ? true : false}
+                        helperText={alertReducer.fullname ? alertReducer.fullname : ''}
                     />
-                    <small className='form-text text-danger'>
-                        {alertReducer.fullname ? alertReducer.fullname : ''}
-                    </small>
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="username">Username</label>
-                    <input type="text" className="form-control" id="username" name="username"
-                        onChange={handleChangeInput} value={username.toLowerCase().replace(/ /g, '')} 
-                        style={{ background: `${alertReducer.username ? `#fd2d6a14` : ''}` }}
+                    <TextField
+                        name="username"
+                        id="username"
+                        label="User Name"
+                        variant="outlined"
+                        onChange={handleChangeInput} 
+                        value={username}
+                        className="w-full"
+                        error={alertReducer.username ? true : false}
+                        helperText={alertReducer.username ? alertReducer.username : ''}
                     />
-                    <small className='form-text text-danger'>
-                        {alertReducer.username ? alertReducer.username : ''}
-                    </small>
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="emailLogin">Email address</label>
-                    <input type="email" className="form-control" id="emailLogin" name="email"
-                        aria-describedby="emailHelp" onChange={handleChangeInput} value={email} 
-                        style={{ background: `${alertReducer.email ? `#fd2d6a14` : ''}` }}
+                    <TextField
+                        name="email"
+                        id="email"
+                        label="Email"
+                        variant="outlined"
+                        onChange={handleChangeInput} 
+                        value={email}
+                        className="w-full"
+                        error={alertReducer.email ? true : false}
+                        helperText={alertReducer.email ? alertReducer.email : ''}
                     />
-                    <small className='form-text text-danger'>
-                        {alertReducer.email ? alertReducer.email : ''}
-                    </small>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="passwordLogin">Password</label>
-
-                    <div className="relative">
-                        <input type={ typePass ? "text" : "password" }
-                            className="form-control" id="passwordLogin"
-                            onChange={handleChangeInput} value={password} name="password"
-                            style={{ background: `${alertReducer.password ? `#fd2d6a14` : ''}` }}
+                    <FormControl className="w-full" variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password"
+                            error={alertReducer.password ? true : false}
+                        >Password</InputLabel>
+                        <OutlinedInput
+                            name="password"
+                            label="Password"
+                            id="password"
+                            type={typePass ? 'text' : 'password'}
+                            value={password}
+                            onChange={handleChangeInput} 
+                            endAdornment={
+                            <InputAdornment position="end" >
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        edge="end"
+                                        onClick={() => setTypePass(!typePass)}
+                                    >
+                                        {typePass ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            labelWidth={70} 
+                            error={alertReducer.password ? true : false}
                         />
-
-                        <small onClick={() => setTypePass(!typePass)} className="absolute cursor-pointer top-1/4 right-1.5 opacity-50 hover:opacity-100 duration-100">
-                            {typePass ? 'Hide' : 'Show'}
-                        </small>
-                    </div>
-                   
-                    <small className='form-text text-danger'>
-                        {alertReducer.password ? alertReducer.password : ''}
-                    </small>
+                        <FormHelperText id="component-error-text" error>{alertReducer.password ? alertReducer.password : ''}</FormHelperText>
+                    </FormControl>
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="cf_password">Password Confirmation</label>
-
-                    <div className="relative">
-                        <input type={ typeCfPass ? "text" : "password" }
-                            className="form-control" id="cf_password"
-                            onChange={handleChangeInput} value={cf_password} name="cf_password" 
-                            style={{ background: `${alertReducer.cf_password ? `#fd2d6a14` : ''}` }}    
+                    <FormControl className="w-full" variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password"
+                            error={alertReducer.cf_password ? true : false}
+                        >Confirm Password</InputLabel>
+                        <OutlinedInput
+                            name="cf_password"
+                            id="cf_password"
+                            type={typeCfPass ? 'text' : 'password'}
+                            value={cf_password}
+                            onChange={handleChangeInput} 
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        edge="end"
+                                        onClick={() => setTypeCfPass(!typeCfPass)}
+                                    >
+                                        {typeCfPass ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            labelWidth={135} 
+                            error={alertReducer.cf_password ? true : false}
                         />
-
-                        <small onClick={() => setTypeCfPass(!typeCfPass)} className="absolute cursor-pointer top-1/4 right-1.5 opacity-50 hover:opacity-100 duration-100">
-                            {typeCfPass ? 'Hide' : 'Show'}
-                        </small>
-                    </div>
-
-                    <small className='form-text text-danger'>
-                        {alertReducer.cf_password ? alertReducer.cf_password : ''}
-                    </small>
+                        <FormHelperText id="component-error-text" error>{alertReducer.cf_password ? alertReducer.cf_password : ''}</FormHelperText>
+                    </FormControl>
                 </div>
 
                 <div className="justify-between mx-0 mb-1 row">
@@ -128,7 +161,7 @@ const Register = () => {
                 </button>
 
                 <p className="my-5 text-center ">
-                    Already have an account? <Link to="/login" className='block text-lg font-semibold text-red-500 duration-300 hover:no-underline'>Login Now</Link>
+                    Already have an account? <Link to="/" className='block text-lg font-semibold text-red-500 duration-300 hover:no-underline'>Login Now</Link>
                 </p>
             </form>
         </div>

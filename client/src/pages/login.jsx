@@ -3,8 +3,13 @@ import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../redux/actions/authAction';
 
+import TextField from '@material-ui/core/TextField';
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, FormHelperText } from '@material-ui/core';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 const Login = () => {
-    const { authReducer } = useSelector(state => state);
+    const { authReducer, alertReducer } = useSelector(state => state);
     const dispatch = useDispatch();
     const history = useHistory();
     const initialState = { email: '', password: '' };
@@ -29,31 +34,52 @@ const Login = () => {
     }
 
     return (
-        <div className="flex items-center justify-center w-full min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center w-full h-screen min-h-screen bg-gray-50">
             <form onSubmit={handleSubmit} className="max-w-sm px-4 bg-white border">
-                {/* <h3 className="mb-4 text-center uppercase">jGram</h3> */}
                 <img src="jgramLogo.png" alt="" className="w-full max-w-xs m-auto" />
                 
                 <div className="form-group">
-                    <label htmlFor="emailLogin">Email address</label>
-                    <input type="email" className="form-control" id="emailLogin" name="email"
-                    aria-describedby="emailHelp" onChange={handleChangeInput} value={email} />
-                    <small id="emailHelp" className='form-text text-muted'>We'll never share your email with anyone else.</small>
+                    <TextField
+                        name="email"
+                        id="email"
+                        label="Email"
+                        variant="outlined"
+                        onChange={handleChangeInput} 
+                        value={email}
+                        className="w-full"
+                        error={alertReducer.email ? true : false}
+                        helperText={alertReducer.email ? alertReducer.email : ''}
+                    />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="passwordLogin">Password</label>
-
-                    <div className="relative">
-                        <input type={ typePass ? "text" : "password" }
-                            className="form-control" id="passwordLogin"
-                            onChange={handleChangeInput} value={password} name="password" />
-
-                        <small onClick={() => setTypePass(!typePass)} className="absolute cursor-pointer top-1/4 right-1.5 opacity-50 hover:opacity-100 duration-100">
-                            {typePass ? 'Hide' : 'Show'}
-                        </small>
-                    </div>
-                   
+                    <FormControl className="w-full" variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password"
+                            error={alertReducer.password ? true : false}
+                        >Password</InputLabel>
+                        <OutlinedInput
+                            name="password"
+                            label="Password"
+                            id="password"
+                            type={typePass ? 'text' : 'password'}
+                            value={password}
+                            onChange={handleChangeInput} 
+                            endAdornment={
+                            <InputAdornment position="end" >
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        edge="end"
+                                        onClick={() => setTypePass(!typePass)}
+                                    >
+                                        {typePass ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            labelWidth={70} 
+                            error={alertReducer.password ? true : false}
+                        />
+                        <FormHelperText id="component-error-text" error>{alertReducer.password ? alertReducer.password : ''}</FormHelperText>
+                    </FormControl>
                 </div>
                 
                 <button type="submit" className={`btn w-100 ${email && password ? `btn-primary` : `btn-dark`}`}
