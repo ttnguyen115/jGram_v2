@@ -46,7 +46,7 @@ const Menu = () => {
     ]
     
     return (
-        <div className="fixed bottom-0 left-0 z-10 w-full shadow">
+        <div className="fixed bottom-0 left-0 z-10 w-full shadow bg-gray-50">
             <ul className="flex flex-row items-center justify-around navbar-nav">
                 {
                     navLinks.map((link, index) => (

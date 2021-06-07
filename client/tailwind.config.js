@@ -3,6 +3,11 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
+
+    backgroundColor: theme => ({
+      ...theme('colors'),
+      '0008': '#0008'
+    }),
     
     minHeight: {
       '70px': '70px',
@@ -14,13 +19,15 @@ module.exports = {
 
     maxWidth: {
       '400px': '400px',
+      '450px': '450px',
       '800px': '800px'
     },
 
     inset: {
       'inherit': 'inherit',
-      '5px': '5px',
       '0': '0',
+      '5px': '5px',
+      '10px': '10px',
     },
 
     flex: {
