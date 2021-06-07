@@ -61,7 +61,7 @@ const Menu = () => {
 
                 <li className="nav-item">
                     <Link className="nav-link" to={`/profile/${authReducer.user._id}`}>
-                        <Avatar src={authReducer.user.avatar} />
+                        <Avatar src={authReducer.user.avatar} size={1} />
                     </Link>
                     
                     <label htmlFor="theme" className="cursor-pointer"

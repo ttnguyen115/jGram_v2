@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import SearchIcon from '@material-ui/icons/Search';
-import { getDataAPI } from '../../api/fetchData';
-import { useDispatch, useSelector } from 'react-redux';
-import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { Link } from 'react-router-dom'
-import UserCard from '../UserCard';
 import { fade, InputBase, makeStyles } from '@material-ui/core';
-import Loading from '../alert/Loading';
+import SearchIcon from '@material-ui/icons/Search';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDataAPI } from '../../api/fetchData';
+import { GLOBALTYPES } from '../../redux/actions/globalTypes';
+import UserCard from '../UserCard';
 
 const useStyle = makeStyles((theme) => ({
     search: {
@@ -16,12 +14,9 @@ const useStyle = makeStyles((theme) => ({
         '&:hover': {
           backgroundColor: fade(theme.palette.common.white, 0.25),
         },
-        marginRight: theme.spacing(2),
-        marginLeft: 0,
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-          marginLeft: theme.spacing(3),
-          width: 'auto',
+            width: 'auto',
         },
     },
       

@@ -14,7 +14,7 @@ const UserCard = ({user, border, handleClose}) => {
                 <Link to={`/profile/${user._id}`} onClick={handleCloseAll} 
                     className="flex items-center p-2"
                 >
-                    <Avatar src={user.avatar} />
+                    <Avatar src={user.avatar} size={1} />
 
                     <div className="ml-2">
                         <span className="block">{user.username}</span>
