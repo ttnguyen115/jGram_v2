@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import { checkImage } from '../../api/imageUpload';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
+import { updateProfileUser } from '../../redux/actions/profileAction';
 
 const EditProfile = ({setOnEdit}) => {
     const { authReducer, themeReducer } = useSelector(state => state);
@@ -11,7 +12,7 @@ const EditProfile = ({setOnEdit}) => {
         fullname: '', mobile: '', address: '', website: '', story: '', gender: ''
     }
     const [userData, setUserData] = useState(initialState);
-    const { fullname, mobile, address, website, story } = userData;
+    const { fullname, mobile, address, website, story, gender } = userData;
     const [avatar, setAvatar] = useState('');
 
     useEffect(() => {
@@ -31,6 +32,12 @@ const EditProfile = ({setOnEdit}) => {
         setUserData({ ...userData, [name]: value });
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        dispatch(updateProfileUser({userData, avatar, authReducer}));
+    }
+
     return (
         <div className="fixed top-0 left-0 z-20 w-full h-screen overflow-auto bg-0008">
             <button className="absolute btn btn-danger top-10px right-10px"
@@ -39,7 +46,7 @@ const EditProfile = ({setOnEdit}) => {
                 Close
             </button>
             
-            <form className="w-full p-5 mx-auto my-5 bg-white rounded-md max-w-450px">
+            <form className="w-full p-5 mx-auto my-5 bg-white rounded-md max-w-450px" onSubmit={handleSubmit}>
                 <div className="relative w-40 h-40 mx-auto my-3 overflow-hidden border rounded-full cursor-pointer">
                     <img src={avatar ? URL.createObjectURL(avatar) : authReducer.user.avatar} alt="avatar"
                         style={{ filter: themeReducer ? 'invert(1)' : 'invert(0)' }} 
@@ -102,7 +109,7 @@ const EditProfile = ({setOnEdit}) => {
 
                 <label htmlFor="gender">Gender</label>
                 <div className="px-0 mb-4 input-group-prepend">
-                    <select name="gender" id="gender" className="capitalize custom-select" onChange={handleInput} >
+                    <select value={gender} name="gender" id="gender" className="capitalize custom-select" onChange={handleInput} >
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>

@@ -31,7 +31,7 @@ const Info = () => {
                     <div className="flex flex-wrap justify-around" key={user._id}>
                         <Avatar src={user.avatar} border="border" size={2} />
                         
-                        <div className="flex-1 w-full mx-4 min-w-250px max-w-400px opacity-70">
+                        <div className="flex-1 w-full mx-4 min-w-250px max-w-500px opacity-70">
                             <div className="flex flex-wrap items-center">
                                 <h2 className="text-3xl font-semibold flex-3">{user.username}</h2>
                                 {
@@ -49,7 +49,7 @@ const Info = () => {
 
                             <h6>{user.fullname} {user.mobile}</h6>
                             <p className="m-0">{user.address}</p>
-                            <h6>{user.email}</h6>
+                            <h6 className="m-0">{user.email}</h6>
                             <a href={user.website} target="_blank" rel="noreferrer">
                                 {user.website}
                             </a>

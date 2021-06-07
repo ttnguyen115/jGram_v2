@@ -91,7 +91,7 @@ const Search = () => {
                 </div>
                 
                 <InputBase
-                    placeholder="Search…"
+                    placeholder="Enter to Search..."
                     classes={{
                         root: classes.inputRoot,
                         input: classes.inputInput,
