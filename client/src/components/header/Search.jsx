@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import { getDataAPI } from '../../api/fetchData';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 import { Link } from 'react-router-dom'
 import UserCard from '../UserCard';
 import { fade, InputBase, makeStyles } from '@material-ui/core';
+import Loading from '../alert/Loading';
 
 const useStyle = makeStyles((theme) => ({
     search: {
@@ -59,43 +60,36 @@ const Search = () => {
     const [users, setUsers] = useState([]);
     const { authReducer } = useSelector(state => state);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (search) {
-            getDataAPI(`search?username=${search}`, authReducer.token)
-            .then(res => setUsers(res.data.users))
-            .catch(err => {
-                dispatch({ 
-                    type: GLOBALTYPES.ALERT, 
-                    payload: {
-                        error: err.response.data.msg
-                    } 
-                })
-            })
-        } else {
-            setUsers([]);
-        }
-    }, [authReducer.token, search, dispatch]);
+    const [load, setLoad] = useState(false);
 
     const handleClose = () => {
         setSearch('');
         setUsers([]);
     }
 
+    const handleSearch = async (e) => {
+        e.preventDefault();
+
+        if (!search) return;
+
+        try {
+            setLoad(true);
+            const res = await getDataAPI(`search?username=${search}`, authReducer.token);
+            setUsers(res.data.users);
+            setLoad(false);
+            
+        } catch (err) {
+            dispatch({ 
+                type: GLOBALTYPES.ALERT, 
+                payload: {
+                    error: err.response.data.msg
+                } 
+            })
+        }
+    }
+
     return (
-        <form className="relative block w-full m-auto">
-            {/* <input type="text" name="search" value={search} 
-                onChange={e => setSearch(e.target.value.toLowerCase().replace(/ /g, ''))} 
-                className="w-full border rounded outline-none bg-gray-50 min-w-250px"
-            />
-
-            <div className="absolute flex text-xs transform translate-x-24 -translate-y-5 pointer-events-none top-1/2 left-1/2"
-                style={{ opacity: search ? 0 : 0.5 }}
-            >
-                <SearchIcon style={{ fontSize: 18 }} />
-                <span>Search</span>
-            </div> */}
-
+        <form className="relative block w-full m-auto" onSubmit={handleSearch}>
             <div className={classes.search}>
                 <div className={classes.searchIcon}>
                     <SearchIcon />
@@ -113,10 +107,15 @@ const Search = () => {
                 />
             </div>
 
-            <div 
+            <div onClick={handleClose}
                 className={`absolute top-0 font-bold text-red-700 cursor-pointer right-5px ${users.length === 0 ? 'opacity-0' : 'opacity-100'} text-2xl`}
-                onClick={handleClose}
             >&times;</div>
+
+            <button type="submit"
+                className="hidden"
+            >
+                Search
+            </button>
 
             <div 
                 className="absolute w-full overflow-auto bg-gray-50 min-w-250px mt-0.5"
@@ -124,11 +123,7 @@ const Search = () => {
             >
                 {
                     search && users.map(user => (
-                        <Link key={user._id} to={`/profile/${user._id}`} 
-                            onClick={handleClose}
-                        >
-                            <UserCard user={user} border="border" />
-                        </Link>
+                        <UserCard key={user._id} user={user} border="border" handleClose={handleClose} />
                     ))
                 }
             </div>
