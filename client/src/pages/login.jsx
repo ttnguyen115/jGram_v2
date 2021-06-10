@@ -35,7 +35,7 @@ const Login = () => {
 
     return (
         <div className="flex items-center justify-center w-full h-screen min-h-screen bg-gray-50">
-            <form onSubmit={handleSubmit} className="max-w-sm px-4 bg-white border">
+            <form onSubmit={handleSubmit} className="px-4 bg-white border max-w-400px">
                 <img src="jgramLogo.png" alt="" className="w-full max-w-xs m-auto" />
                 
                 <div className="form-group">

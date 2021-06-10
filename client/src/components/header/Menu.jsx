@@ -1,22 +1,17 @@
 // Material UI
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import Brightness7Icon from '@material-ui/icons/Brightness7';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import QuestionAnswerOutlinedIcon from '@material-ui/icons/QuestionAnswerOutlined';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 // React
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom';
-// Redux
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../redux/actions/authAction';
-import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 import Avatar from '../Avatar';
+// Redux
+import { useSelector } from 'react-redux';
+import Setting from './Setting';
 
 const Menu = () => {
-    const { authReducer, themeReducer } = useSelector(state => state);
-    const dispatch = useDispatch();
+    const { authReducer } = useSelector(state => state);
     const { pathname } = useLocation();
     
     const isActive = (pn) => {
@@ -42,11 +37,11 @@ const Menu = () => {
             label: 'Notify', 
             icon: <FavoriteBorderOutlinedIcon id="Notify" color={isActive('/notify') && 'primary'} />, 
             path: '/notify' 
-        },
+        }
     ]
     
     return (
-        <div className="fixed bottom-0 left-0 z-10 w-full shadow bg-gray-50">
+        <div className="fixed bottom-0 left-0 z-10 w-full bg-gray-300 shadow">
             <ul className="flex flex-row items-center justify-around navbar-nav">
                 {
                     navLinks.map((link, index) => (
@@ -56,22 +51,14 @@ const Menu = () => {
                             </Link>
                         </li>
                     ))
+                    
                 }
-                
+
+                <Setting className="cursor-pointer" />
 
                 <li className="nav-item">
                     <Link className="nav-link" to={`/profile/${authReducer.user._id}`}>
                         <Avatar src={authReducer.user.avatar} size={1} />
-                    </Link>
-                    
-                    <label htmlFor="theme" className="cursor-pointer"
-                        onClick={() => dispatch({ type: GLOBALTYPES.THEME, payload: !themeReducer })}
-                    >
-                        { themeReducer ? <Brightness7Icon /> : <Brightness4Icon /> }
-                    </label>
-                        
-                    <Link className="" to="/" onClick={() => dispatch(logout())} >
-                        <ExitToAppIcon />
                     </Link>
                 </li>
             </ul>

@@ -38,8 +38,8 @@ const Register = () => {
 
     return (
         <div className="flex items-center justify-center w-full h-screen min-h-screen bg-gray-50">
-            <form onSubmit={handleSubmit} className="max-w-sm px-4 bg-white border">
-                <img src="jgramLogo.png" alt="" className="w-full max-w-xs m-auto" />
+            <form onSubmit={handleSubmit} className="px-4 bg-white border max-w-400px min-w-400px">
+                <img src="jgramLogo.png" alt="" className="object-cover w-full m-auto max-w-200px" />
                 
                 <div className="form-group">
                     <TextField
@@ -160,7 +160,7 @@ const Register = () => {
                     Register
                 </button>
 
-                <p className="my-5 text-center ">
+                <p className="my-3 text-center ">
                     Already have an account? <Link to="/" className='block text-lg font-semibold text-red-500 duration-300 hover:no-underline'>Login Now</Link>
                 </p>
             </form>
