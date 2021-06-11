@@ -37,7 +37,7 @@ const Setting = () => {
     
     return (
         <div>
-            <SettingsIcon onClick={handleClick} />
+            <SettingsIcon fontSize="large" onClick={handleClick} />
 
             <Popover
                 id={id}

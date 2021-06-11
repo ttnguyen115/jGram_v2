@@ -22,7 +22,7 @@ const CardHeader = ({post}) => {
             <div className="flex">
                 <Avatar src={post.user.avatar} size={3} />
 
-                <div className="">
+                <div className="ml-4">
                     <h6 className="m-0 font-medium">
                         <Link to={`/profile/${post.user._id}`} className="text-black">
                             {post.user.username}

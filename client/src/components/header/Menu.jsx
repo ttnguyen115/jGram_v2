@@ -23,26 +23,26 @@ const Menu = () => {
     const navLinks = [
         { 
             label: 'Home', 
-            icon: <HomeOutlinedIcon id="Home" color={isActive('/') && 'primary'} />, 
+            icon: <HomeOutlinedIcon id="Home" fontSize="large" color={isActive('/') && 'primary'} />, 
             path: '/' 
         },
         
         { 
             label: 'Message',
-            icon: <QuestionAnswerOutlinedIcon id="Message" color={isActive('/message') && 'primary'} />, 
+            icon: <QuestionAnswerOutlinedIcon id="Message" fontSize="large" color={isActive('/message') && 'primary'} />, 
             path: '/message' 
         },
         
         { 
             label: 'Notify', 
-            icon: <FavoriteBorderOutlinedIcon id="Notify" color={isActive('/notify') && 'primary'} />, 
+            icon: <FavoriteBorderOutlinedIcon id="Notify" fontSize="large" color={isActive('/notify') && 'primary'} />, 
             path: '/notify' 
         }
     ]
     
     return (
-        <div className="fixed bottom-0 left-0 z-10 w-full bg-gray-300 shadow">
-            <ul className="flex flex-row items-center justify-around navbar-nav">
+        <div className="fixed bottom-0 left-0 z-10 w-full bg-gray-200 border shadow h-70px">
+            <ul className="flex flex-row items-center justify-around h-full navbar-nav">
                 {
                     navLinks.map((link, index) => (
                         <li className={`px-2 nav-item ${isActive(link.path) ? 'opacity-100' : 'opacity-50'}`} key={index} >
@@ -58,7 +58,7 @@ const Menu = () => {
 
                 <li className="nav-item">
                     <Link className="nav-link" to={`/profile/${authReducer.user._id}`}>
-                        <Avatar src={authReducer.user.avatar} size={1} />
+                        <Avatar src={authReducer.user.avatar} size={3} />
                     </Link>
                 </li>
             </ul>
