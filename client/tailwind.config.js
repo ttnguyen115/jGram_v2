@@ -32,6 +32,7 @@ module.exports = {
 
     maxHeight: {
       '70px': '70px',
+      '100px': '100px',
       '270px': '270px',
     },
 
@@ -66,4 +67,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  important: true,
 }
