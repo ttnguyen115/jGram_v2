@@ -5,6 +5,7 @@ import { GLOBALTYPES } from '../redux/actions/globalTypes';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import Button from '@material-ui/core/Button';
+import { createPost } from '../redux/actions/postAction';
 
 const StatusModal = () => {
     const { authReducer, themeReducer } = useSelector(state => state);
@@ -78,9 +79,22 @@ const StatusModal = () => {
         setStream(false);
     }
 
+    const handleSubmit = e => {
+        e.preventDefault();
+
+        if (images.length === 0) return dispatch({ type: GLOBALTYPES.ALERT, payload: { error: 'Please add your photos!' } });
+    
+        dispatch(createPost({ content, images, authReducer }));
+
+        setContent('');
+        setImages([]);
+        if (tracks) tracks.stop();
+        dispatch({ type: GLOBALTYPES.STATUS, payload: false });
+    }
+
     return (
         <div className="fixed top-0 z-10 w-full h-screen overflow-auto lef-0 bg-0008">
-            <form className="w-full p-4 mx-auto my-8 bg-white rounded max-w-450px">
+            <form className="w-full p-4 mx-auto my-8 bg-white rounded max-w-450px" onSubmit={handleSubmit}>
                 <div className="flex items-center justify-between pb-2.5 mb-2 border-b-2">
                     <h5 className="m-0 text-2xl font-semibold">Create Post</h5>
                     <span 
@@ -159,7 +173,11 @@ const StatusModal = () => {
                 </div>      
             
                 <div className="">
-                    <Button variant="contained" color="primary" className="w-full">Post</Button>
+                    <Button variant="contained" color="primary" className="w-full"
+                        type="submit"
+                    >
+                        Post
+                    </Button>
                 </div>
             </form>
         </div>
