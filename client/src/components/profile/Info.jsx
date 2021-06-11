@@ -7,6 +7,7 @@ import FollowBtn from '../FollowBtn';
 import EditProfile from './EditProfile';
 import Followers from './Followers';
 import Following from './Following';
+import Button from '@material-ui/core/Button';
 
 const Info = () => {
     const { id } = useParams();
@@ -40,13 +41,13 @@ const Info = () => {
                                 <h2 className="text-3xl font-semibold flex-3">{user.username}</h2>
                                 {
                                     user._id === authReducer.user._id
-                                    ? <button className="flex-2 btn btn-primary" onClick={() => setOnEdit(true)} >Edit Profile</button>
+                                    ? <Button className="flex-2" variant="contained" color="primary" onClick={() => setOnEdit(true)} >Edit Profile</Button>
                                     : <FollowBtn user={user} />
                                 }
                                 
                             </div>
 
-                            <div className="font-medium text-blue-500">
+                            <div className="font-medium text-violet">
                                 <span className="mr-4 cursor-pointer hover:underline"
                                     onClick={() => setShowFollowers(true)}
                                 >

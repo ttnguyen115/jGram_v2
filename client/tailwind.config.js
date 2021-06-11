@@ -9,9 +9,13 @@ module.exports = {
       }
     },
 
+    textColor: {
+      'violet': '#3f51b5',
+    },
+
     backgroundColor: theme => ({
       ...theme('colors'),
-      '0008': '#0008'
+      '0008': '#0008',
     }),
     
     minHeight: {

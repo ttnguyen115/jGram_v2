@@ -4,6 +4,7 @@ import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import { checkImage } from '../../api/imageUpload';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 import { updateProfileUser } from '../../redux/actions/profileAction';
+import Button from '@material-ui/core/Button';
 
 const EditProfile = ({setOnEdit}) => {
     const { authReducer, themeReducer } = useSelector(state => state);
@@ -116,7 +117,7 @@ const EditProfile = ({setOnEdit}) => {
                     </select>
                 </div>
 
-                <button className="btn btn-info w-100" type="submit">Save</button>
+                <Button className=" w-100" type="submit" variant="contained" color="primary">Save</Button>
             </form>
         </div>
     )

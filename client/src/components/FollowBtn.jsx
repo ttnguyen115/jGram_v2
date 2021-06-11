@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { follow, unfollow } from '../redux/actions/profileAction';
+import Button from '@material-ui/core/Button';
 
 const FollowBtn = ({user}) => {
     const [followed, setFollowed] = useState(false);
@@ -28,17 +29,17 @@ const FollowBtn = ({user}) => {
         <>
         {
             followed
-            ? <button className="btn btn-outline-danger"
+            ? <Button variant="contained" color="secondary"
                 onClick={handleUnfollow}
             >
                 Unfollow
-            </button>
+            </Button>
             
-            : <button className="btn btn-outline-info"
+            : <Button variant="contained" color="primary"
                 onClick={handleFollow}
             >
                 Follow
-            </button>
+            </Button>
         }
         </>
     )
