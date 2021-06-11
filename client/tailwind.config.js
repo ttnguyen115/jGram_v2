@@ -4,14 +4,21 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
+        '3px': '3px',
+        '7px': '7px',
         '350px': '350px',
         '400px': '400px',
-      }
+      },
+
+      gridTemplateColumns: {
+        'status': 'repeat(auto-fill, minmax(100px, 1fr))'
+      },
     },
 
-    textColor: {
+    textColor: theme => ({
+      ...theme('colors'),
       'violet': '#3f51b5',
-    },
+    }),
 
     backgroundColor: theme => ({
       ...theme('colors'),
@@ -21,6 +28,11 @@ module.exports = {
     minHeight: {
       '70px': '70px',
       '150px': '150px',
+    },
+
+    maxHeight: {
+      '70px': '70px',
+      '270px': '270px',
     },
 
     minWidth: {
@@ -38,6 +50,8 @@ module.exports = {
 
     inset: {
       'inherit': 'inherit',
+      '-1px': '-1px',
+      '-2px': '-2px',
       '0': '0',
       '5px': '5px',
       '10px': '10px',

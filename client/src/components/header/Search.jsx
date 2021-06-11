@@ -55,6 +55,7 @@ const Search = () => {
     const [users, setUsers] = useState([]);
     const { authReducer } = useSelector(state => state);
     const dispatch = useDispatch();
+    // eslint-disable-next-line
     const [load, setLoad] = useState(false);
 
     const handleClose = () => {
