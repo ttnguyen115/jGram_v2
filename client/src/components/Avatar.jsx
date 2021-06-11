@@ -7,7 +7,8 @@ const Avatar = ({ src, size }) => {
     const imgSize = [
         'h-5 w-5',
         'h-7 w-7',
-        'h-36 w-36'
+        'h-36 w-36',
+        'h-10 w-10'
     ]
     
     return (

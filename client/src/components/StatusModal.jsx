@@ -5,10 +5,11 @@ import { GLOBALTYPES } from '../redux/actions/globalTypes';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import Button from '@material-ui/core/Button';
-import { createPost } from '../redux/actions/postAction';
+import { createPost, updatePost } from '../redux/actions/postAction';
+import { useEffect } from 'react';
 
 const StatusModal = () => {
-    const { authReducer, themeReducer } = useSelector(state => state);
+    const { authReducer, themeReducer, statusReducer } = useSelector(state => state);
     const dispatch = useDispatch();
 
     const [content, setContent] = useState('');
@@ -84,13 +85,24 @@ const StatusModal = () => {
 
         if (images.length === 0) return dispatch({ type: GLOBALTYPES.ALERT, payload: { error: 'Please add your photos!' } });
     
-        dispatch(createPost({ content, images, authReducer }));
+        if (statusReducer.onEdit) {
+            dispatch(updatePost({ content, images, authReducer, statusReducer }));
+        } else {
+            dispatch(createPost({ content, images, authReducer }));
+        }
 
         setContent('');
         setImages([]);
         if (tracks) tracks.stop();
         dispatch({ type: GLOBALTYPES.STATUS, payload: false });
     }
+
+    useEffect(() => {
+        if (statusReducer.onEdit) {
+            setContent(statusReducer.content);
+            setImages(statusReducer.images);
+        }
+    }, [statusReducer]);
 
     return (
         <div className="fixed top-0 z-10 w-full h-screen overflow-auto lef-0 bg-0008">
@@ -121,9 +133,15 @@ const StatusModal = () => {
                                 >
                                     <img 
                                         alt="images"
-                                        src={img.camera ? img.camera : URL.createObjectURL(img)}  
+                                        src={
+                                            img.camera 
+                                            ? img.camera 
+                                            : img.url 
+                                                ? img.url
+                                                : URL.createObjectURL(img)
+                                        }  
                                         style={{ filter: themeReducer ? 'invert(1)' : 'invert(0)' }} 
-                                        className="block object-contain w-full h-full img-thumbnail"
+                                        className="block object-contain w-full h-full img-thumbnail max-h-100px"
                                     />
                                     <span 
                                         className="absolute top-0 right-0 z-10 flex items-center justify-center w-5 h-5 text-2xl font-bold text-red-700 bg-white border border-red-700 rounded-full cursor-pointer"
