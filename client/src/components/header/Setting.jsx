@@ -1,14 +1,16 @@
-import SettingsIcon from '@material-ui/icons/Settings';
-import React from 'react'
+import { makeStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { GLOBALTYPES } from '../../redux/actions/globalTypes';
+import SettingsIcon from '@material-ui/icons/Settings';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { logout } from '../../redux/actions/authAction';
-import { makeStyles } from '@material-ui/core';
+import { GLOBALTYPES } from '../../redux/actions/globalTypes';
+
 
 const useStyles = makeStyles(theme => ({
     items: {
@@ -20,9 +22,9 @@ const useStyles = makeStyles(theme => ({
 
 const Setting = () => {
     const classes = useStyles();
-    const { themeReducer } = useSelector(state => state);
     const dispatch = useDispatch();
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const { themeReducer } = useSelector(state => state);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -37,8 +39,10 @@ const Setting = () => {
     
     return (
         <div>
-            <SettingsIcon fontSize="large" onClick={handleClick} />
-
+            <Button aria-describedby={id} onClick={handleClick}>
+                <SettingsIcon fontSize="large" />
+            </Button>
+            
             <Popover
                 id={id}
                 open={open}

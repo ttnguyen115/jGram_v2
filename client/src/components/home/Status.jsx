@@ -8,7 +8,7 @@ const Status = () => {
     const dispatch = useDispatch();
 
     return (
-        <div className="flex items-center p-4 my-3 bg-white rounded shadow-sm">
+        <div className="flex items-center p-4 my-3 bg-white border rounded shadow-sm">
             <Avatar src={authReducer.user.avatar} size={1} />
             
             <button 
