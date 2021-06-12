@@ -9,7 +9,7 @@ const Carousel = ({images, id}) => {
     }
 
     return (
-        <div id={`image${id}`} className="carousel slide" data-ride="carousel">
+        <div id={`image${id}`} className="carousel slide">
             <ol className="carousel-indicators">
                 {
                     images.map((img, index) => (
