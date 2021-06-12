@@ -6,8 +6,9 @@ import { likeComment, updateComment, unlikeComment } from '../../../redux/action
 import Avatar from '../../Avatar'
 import LikeBtn from '../../LikeBtn'
 import CommentMenu from './CommentMenu'
+import InputComment from '../InputComment'
 
-const CommentCard = ({comment, post}) => {
+const CommentCard = ({children, comment, post, commentId}) => {
     const dispatch = useDispatch();
     const { authReducer } = useSelector(state => state);
     
@@ -16,6 +17,8 @@ const CommentCard = ({comment, post}) => {
     const [isLike, setIsLike] = useState(false);
     const [onEdit, setOnEdit] = useState(false);
     const [loadLike, setLoadLike] = useState(false);
+
+    const [onReply, setOnReply] = useState(false);
 
     useEffect(() => {
         setContent(comment.content);
@@ -50,6 +53,11 @@ const CommentCard = ({comment, post}) => {
         setLoadLike(true);
         await dispatch(unlikeComment({ comment, post, authReducer }));
         setLoadLike(false);
+    }
+
+    const handleReply = () => {
+        if (onReply) return setOnReply(false);
+        setOnReply({ ...comment, commentId });
     }
 
     const styleCard = {
@@ -108,7 +116,9 @@ const CommentCard = ({comment, post}) => {
                                     onClick={() => setOnEdit(false)}
                                 >Cancel</small>
                             </>
-                            : <small className="mr-3 font-bold text-blue-700">Reply</small>
+                            : <small className="mr-3 font-bold text-blue-700"
+                                onClick={handleReply}
+                            >{onReply ? 'Cancel' : 'Reply'}</small>
                         }
                     </div>
                 </div>
@@ -119,6 +129,17 @@ const CommentCard = ({comment, post}) => {
                     <CommentMenu post={post} comment={comment} auth={authReducer} setOnEdit={setOnEdit} />
                 </div>
             </div>
+        
+            {
+                onReply && 
+                <InputComment post={post} onReply={onReply} setOnReply={setOnReply}>
+                    <Link to={`/profile/${onReply.user._id}`} className="mr-2">
+                        @{onReply.user.username}: 
+                    </Link>
+                </InputComment>
+            }
+
+            {children}
         </div>
     )
 }
