@@ -2,6 +2,7 @@ import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { likeComment, updateComment, unlikeComment } from '../../../redux/actions/commentAction'
 import Avatar from '../../Avatar'
 import LikeBtn from '../../LikeBtn'
 import CommentMenu from './CommentMenu'
@@ -9,21 +10,46 @@ import CommentMenu from './CommentMenu'
 const CommentCard = ({comment, post}) => {
     const dispatch = useDispatch();
     const { authReducer } = useSelector(state => state);
+    
     const [content, setContent] = useState('');
     const [readMore, setReadMore] = useState(false);
-
     const [isLike, setIsLike] = useState(false);
+    const [onEdit, setOnEdit] = useState(false);
+    const [loadLike, setLoadLike] = useState(false);
 
     useEffect(() => {
-        setContent(comment.content)
-    }, [comment]);
+        setContent(comment.content);
 
-    const handleLike = () => {
-        
+        if (comment.likes.find(like => like._id === authReducer.user._id)) {
+            setIsLike(true);
+        } 
+    }, [comment, authReducer.user._id]);
+
+    const handleUpdate = () => {
+        if (comment.content !== content) {
+            dispatch(updateComment({comment, post, content, authReducer}));
+            setOnEdit(false);
+        } else {
+            setOnEdit(false);
+        }
+    }
+
+    const handleLike = async () => {
+        if (loadLike) return;
+        setIsLike(true);
+
+        setLoadLike(true);
+        await dispatch(likeComment({ comment, post, authReducer }));
+        setLoadLike(false);
     }
     
-    const handleUnlike = () => {
-        
+    const handleUnlike = async () => {
+        if (loadLike) return;
+        setIsLike(false);
+
+        setLoadLike(true);
+        await dispatch(unlikeComment({ comment, post, authReducer }));
+        setLoadLike(false);
     }
 
     const styleCard = {
@@ -34,7 +60,7 @@ const CommentCard = ({comment, post}) => {
     return (
         <div className="px-4 py-2 mt-2" style={styleCard}>
             <Link to={`/profile/${comment.user._id}`}
-                className="flex text-black"
+                className="flex text-black w-max"
             >
                 <Avatar src={comment.user.avatar} size={1} />
 
@@ -43,34 +69,54 @@ const CommentCard = ({comment, post}) => {
 
             <div className="flex items-center p-2 bg-gray-200 rounded-md rounded-tl-none">
                 <div className="flex-fill">
-                    <div className="">
-                        <span>
-                            {
-                                content.length < 100 ? content :
-                                readMore ? content + ' ' : content.slice(0, 100) + '.....'
-                            }
-                        </span>
-
-                        {
-                            content.length > 100 &&
-                            <span onClick={() => setReadMore(!readMore)}
-                                className="font-bold text-blue-700 cursor-pointer"
-                            >
-                                {readMore ? 'Hide content' : 'Read more'}
+                    {
+                        onEdit
+                        ? <textarea rows="10" value={content} onChange={e => setContent(e.target.value)} 
+                            className="w-full border-none outline-none"
+                        />
+                        
+                        : <div>
+                            <span>
+                                {
+                                    content.length < 100 ? content :
+                                    readMore ? content + ' ' : content.slice(0, 100) + '.....'
+                                }
                             </span>
-                        }
-                    </div>
+
+                            {
+                                content.length > 100 &&
+                                <span onClick={() => setReadMore(!readMore)}
+                                    className="font-medium underline cursor-pointer"
+                                >
+                                    {readMore ? 'Hide content' : 'Read more'}
+                                </span>
+                            }
+                        </div>
+                    }
 
                     <div className="cursor-pointer">
                         <small className="mr-3 text-muted">{moment(comment.createdAt).fromNow()}</small>
                         <small className="mr-3 font-bold">{comment.likes.length} likes</small>
-                        <small className="mr-3 font-bold">Reply</small>
+                        {
+                            onEdit 
+                            ? <>
+                                <small className="mr-3 font-bold text-blue-700"
+                                    onClick={handleUpdate}
+                                >Update</small>
+                                
+                                <small className="mr-3 font-bold text-red-600"
+                                    onClick={() => setOnEdit(false)}
+                                >Cancel</small>
+                            </>
+                            : <small className="mr-3 font-bold text-blue-700">Reply</small>
+                        }
                     </div>
                 </div>
             
                 <div className="flex items-center mx-2 cursor-pointer">
-                    <LikeBtn isLike={isLike} handleLike={handleLike} handleUnlike={handleUnlike} size={"small"} />
-                    <CommentMenu post={post} comment={comment} auth={authReducer} />
+                    <LikeBtn size={"small"} isLike={isLike} 
+                        handleLike={handleLike} handleUnlike={handleUnlike}  />
+                    <CommentMenu post={post} comment={comment} auth={authReducer} setOnEdit={setOnEdit} />
                 </div>
             </div>
         </div>

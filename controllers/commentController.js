@@ -21,7 +21,48 @@ const commentController = {
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
-    }
+    },
+
+    updateComment: async (req, res) => {
+        try {
+            const { content } = req.body;
+            await Comments.findOneAndUpdate({ _id: req.params.id, user: req.user._id }, { content });
+
+            res.json({ msg: 'Update Success!' });
+            
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+
+    likeComment: async (req, res) => {
+        try {
+            const comment = await Comments.find({ _id: req.params.id, likes: req.user._id });
+            if (comment.length > 0) return res.status(400).json({ msg: 'You liked this comment!' })
+
+            await Comments.findOneAndUpdate({ _id: req.params.id }, {
+                $push: { likes: req.user._id }
+            }, { new: true });
+
+            res.json({ msg: 'Liked Comment!' })
+
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    unlikePost: async (req, res) => {
+        try {
+            await Comments.findOneAndUpdate({ _id: req.params.id }, {
+                $pull: { likes: req.user._id }
+            }, { new: true });
+
+            res.json({ msg: 'Unliked Comment!' })
+
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
 }
 
 module.exports = commentController;

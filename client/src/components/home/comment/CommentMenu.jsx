@@ -3,11 +3,11 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 
-const CommentMenu = ({post, comment, auth}) => {
+const CommentMenu = ({post, comment, auth, setOnEdit}) => {
     const MenuItem = () => {
         return (
             <>
-                <div className="flex my-2 dropdown-item">
+                <div className="flex my-2 dropdown-item" onClick={() => setOnEdit(true)}>
                     <AddCircleOutlineOutlinedIcon /> Edit
                 </div>
                 
@@ -25,7 +25,7 @@ const CommentMenu = ({post, comment, auth}) => {
                 <div className="cursor-pointer dropdown nav-item">
                     <MoreVertIcon id="moreLink" data-toggle="dropdown" />
 
-                    <div className="absolute right-0 dropdown-menu left-inherit" aria-labelledby="moreLink">
+                    <div className="absolute right-0 dropdown-menu left-inherit transform-none" aria-labelledby="moreLink">
                         {
                             post.user._id === auth.user._id 
                             ? comment.user._id === auth.user._id
