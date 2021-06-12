@@ -74,3 +74,31 @@ export const updatePost = ({ content, images, authReducer, statusReducer }) => a
         });
     }
 }
+
+export const likePost = ({ post, authReducer }) => async (dispatch) => {
+    const newPost = { ...post, likes: [...post.likes, authReducer.user] }
+    dispatch({ type: POST_TYPE.UPDATE_POSTS, payload: newPost })
+
+    try {
+        await patchDataAPI(`post/${post._id}/like`, null, authReducer.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        });
+    }
+}
+
+export const unlikePost = ({ post, authReducer }) => async (dispatch) => {
+    const newPost = { ...post, likes: post.likes.filter(like => like._id !== authReducer.user._id) }
+    dispatch({ type: POST_TYPE.UPDATE_POSTS, payload: newPost })
+    
+    try {
+        await patchDataAPI(`post/${post._id}/unlike`, null, authReducer.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        });
+    }
+}

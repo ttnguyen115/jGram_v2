@@ -34,6 +34,16 @@ const Setting = () => {
         setAnchorEl(null);
     };
 
+    const handleLogout = () => {
+        dispatch(logout())
+        handleClose();
+    }
+
+    const handleModeChange = () => {
+        dispatch({ type: GLOBALTYPES.THEME, payload: !themeReducer })
+        handleClose();
+    }
+
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
     
@@ -59,12 +69,12 @@ const Setting = () => {
             >
                 <div className={classes.items}>
                     <label htmlFor="theme" className="cursor-pointer"
-                        onClick={() => dispatch({ type: GLOBALTYPES.THEME, payload: !themeReducer })}
+                        onClick={handleModeChange}
                     >
                         { themeReducer ? <span><Brightness7Icon />Light mode</span> : <span><Brightness4Icon />Dark mode</span> }
                     </label>
                             
-                    <Link className="" to="/" onClick={() => dispatch(logout())} >
+                    <Link className="" to="/" onClick={handleLogout} >
                         <span><ExitToAppIcon />Log Out</span>
                     </Link>
                 </div>
