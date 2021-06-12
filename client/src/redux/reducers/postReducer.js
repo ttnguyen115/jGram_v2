@@ -29,7 +29,7 @@ const postReducer = (state = initialState, action) => {
                 result: action.payload.result,
             }
         
-        case POST_TYPE.UPDATE_POSTS:
+        case POST_TYPE.UPDATE_POST:
             return {
                 ...state,
                 posts: EditData(state.posts, action.payload._id, action.payload),

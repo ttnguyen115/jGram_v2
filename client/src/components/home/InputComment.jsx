@@ -17,7 +17,7 @@ const InputComment = ({children, post}) => {
         const newComment = {
             content,
             likes: [],
-            user: authReducer,
+            user: authReducer.user,
             createdAt: new Date().toISOString()
         }
 

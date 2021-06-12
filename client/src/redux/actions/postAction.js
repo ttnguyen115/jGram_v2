@@ -6,7 +6,7 @@ export const POST_TYPE = {
     CREATE_POST: 'CREATE_POST',
     LOADING_POST: 'LOADING_POST',
     GET_POSTS: 'GET_POSTS',
-    UPDATE_POSTS: 'UPDATE_POSTS'
+    UPDATE_POST: 'UPDATE_POST'
 }
 
 export const createPost = ({ content, images, authReducer }) => async (dispatch) => {
@@ -63,7 +63,7 @@ export const updatePost = ({ content, images, authReducer, statusReducer }) => a
             content, images: [...imgOldUrl, ...media] 
         }, authReducer.token);
 
-        dispatch({ type: POST_TYPE.UPDATE_POSTS, payload: res.data.newPost });
+        dispatch({ type: POST_TYPE.UPDATE_POST, payload: res.data.newPost });
 
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
 
@@ -77,7 +77,7 @@ export const updatePost = ({ content, images, authReducer, statusReducer }) => a
 
 export const likePost = ({ post, authReducer }) => async (dispatch) => {
     const newPost = { ...post, likes: [...post.likes, authReducer.user] }
-    dispatch({ type: POST_TYPE.UPDATE_POSTS, payload: newPost })
+    dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost })
 
     try {
         await patchDataAPI(`post/${post._id}/like`, null, authReducer.token)
@@ -91,7 +91,7 @@ export const likePost = ({ post, authReducer }) => async (dispatch) => {
 
 export const unlikePost = ({ post, authReducer }) => async (dispatch) => {
     const newPost = { ...post, likes: post.likes.filter(like => like._id !== authReducer.user._id) }
-    dispatch({ type: POST_TYPE.UPDATE_POSTS, payload: newPost })
+    dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost })
     
     try {
         await patchDataAPI(`post/${post._id}/unlike`, null, authReducer.token)

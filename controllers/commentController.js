@@ -19,7 +19,7 @@ const commentController = {
             res.json({ newComment });
             
         } catch (err) {
-            
+            return res.status(500).json({msg: err.message})
         }
     }
 }

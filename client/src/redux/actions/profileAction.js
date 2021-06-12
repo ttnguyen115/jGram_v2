@@ -14,10 +14,12 @@ export const getProfileUsers = ({users, id, authReducer}) => async (dispatch) =>
         try {
             dispatch({type: PROFILE_TYPES.LOADING, payload: true});
             const res = await getDataAPI(`/user/${id}`, authReducer.token);
+
             dispatch({
                 type: PROFILE_TYPES.GET_USER,
                 payload: res.data
             })
+            
             dispatch({type: PROFILE_TYPES.LOADING, payload: false});
 
         } catch (err) {

@@ -41,16 +41,16 @@ const CardFooter = ({post}) => {
         <div className="pb-3">
             <div className="flex justify-between px-4 cursor-pointer">
                 <div className="">
-                    <LikeBtn isLike={isLike} handleLike={handleLike} handleUnlike={handleUnlike} />
+                    <LikeBtn isLike={isLike} handleLike={handleLike} handleUnlike={handleUnlike} size={"large"} />
                     
                     <Link to={`/post/${post._id}`} className="m-2">
-                        <ChatBubbleOutlineIcon />
+                        <ChatBubbleOutlineIcon fontSize="large"  />
                     </Link>
 
-                    <ShareIcon className="m-2" />
+                    <ShareIcon className="m-2" fontSize="large" />
                 </div>
                 
-                <BookmarkBorderIcon />
+                <BookmarkBorderIcon fontSize="large" />
             </div>
             
             <div className="flex justify-between">
