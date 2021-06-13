@@ -1,4 +1,4 @@
-import { patchDataAPI, postDataAPI } from '../../api/fetchData';
+import { patchDataAPI, postDataAPI, deleteDataAPI } from '../../api/fetchData';
 import { EditData, GLOBALTYPES, DeleteData } from './globalTypes';
 import { POST_TYPE } from './postAction';
 
@@ -8,7 +8,7 @@ export const createComment = ({post, newComment, authReducer}) => async (dispatc
     dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost });
 
     try {
-        const data = { ...newComment, postId: post._id };
+        const data = { ...newComment, postId: post._id, postUserId: post.user._id };
         const res = await postDataAPI('comment', data, authReducer.token);
 
         const newData = {...res.data.newComment, user: authReducer.user};
@@ -62,6 +62,26 @@ export const unlikeComment = ({comment, post, authReducer}) => async (dispatch) 
 
     try {
         await patchDataAPI(`comment/${comment._id}/unlike`, null, authReducer.token);
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
+    }
+}
+
+export const deleteComment = ({post, comment, authReducer}) => async (dispatch) => {
+    const deleteArr = [...post.comments.filter(cm => cm.reply === comment._id), comment];
+    
+    const newPost = {
+        ...post,
+        comments: post.comments.filter(cm => !deleteArr.find(da => cm._id === da._id))
+    }
+
+    dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost });
+
+    try {
+        deleteArr.forEach(item => {
+            deleteDataAPI(`comment/${item._id}`, authReducer.token)
+        });
+
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
     }

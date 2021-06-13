@@ -13,7 +13,7 @@ const LikeBtn = ({isLike, handleLike, handleUnlike, size}) => {
                 ? <FavoriteIcon className="mx-2 my-1 ml-0" color="error" onClick={handleUnlike} fontSize={size}
                     style={{filter: themeReducer ? 'invert(1)' : 'invert(0)'}}
                 />
-                : <FavoriteBorderIcon className="m-2" onClick={handleLike} fontSize={size} />
+                : <FavoriteBorderIcon className="mx-2 my-1 ml-0" onClick={handleLike} fontSize={size} />
             }
         </>
     )

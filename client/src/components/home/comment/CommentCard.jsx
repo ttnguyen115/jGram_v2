@@ -22,6 +22,8 @@ const CommentCard = ({children, comment, post, commentId}) => {
 
     useEffect(() => {
         setContent(comment.content);
+        setIsLike(false);
+        setOnReply(false);
 
         if (comment.likes.find(like => like._id === authReducer.user._id)) {
             setIsLike(true);
@@ -84,6 +86,12 @@ const CommentCard = ({children, comment, post, commentId}) => {
                         />
                         
                         : <div>
+                            {
+                                comment.tag && comment.tag._id !== comment.user._id &&
+                                <Link to={`/profile/${comment.tag._id}`} className="mr-2 text-blue-500 hover:underline" >
+                                    @{comment.tag.username}
+                                </Link>
+                            }
                             <span>
                                 {
                                     content.length < 100 ? content :
@@ -126,14 +134,14 @@ const CommentCard = ({children, comment, post, commentId}) => {
                 <div className="flex items-center mx-2 cursor-pointer">
                     <LikeBtn size={"small"} isLike={isLike} 
                         handleLike={handleLike} handleUnlike={handleUnlike}  />
-                    <CommentMenu post={post} comment={comment} auth={authReducer} setOnEdit={setOnEdit} />
+                    <CommentMenu post={post} comment={comment} setOnEdit={setOnEdit} />
                 </div>
             </div>
         
             {
                 onReply && 
                 <InputComment post={post} onReply={onReply} setOnReply={setOnReply}>
-                    <Link to={`/profile/${onReply.user._id}`} className="mr-2">
+                    <Link to={`/profile/${onReply.user._id}`} className="mr-2 text-blue-500 hover:underline">
                         @{onReply.user.username}: 
                     </Link>
                 </InputComment>
