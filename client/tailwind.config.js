@@ -7,12 +7,14 @@ module.exports = {
         '3px': '3px',
         '7px': '7px',
         '70px': '70px',
+        '300px': '300px',
         '350px': '350px',
         '400px': '400px',
       },
 
       gridTemplateColumns: {
-        'status': 'repeat(auto-fill, minmax(100px, 1fr))'
+        'status': 'repeat(auto-fill, minmax(100px, 1fr))',
+        'posts': 'repeat(auto-fill, minmax(300px, 1fr))'
       },
     },
 
@@ -39,6 +41,7 @@ module.exports = {
 
     minWidth: {
       '250px': '250px',
+      '300px': '300px',
       '400px': '400px',
     },
 

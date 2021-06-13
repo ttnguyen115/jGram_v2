@@ -6,7 +6,8 @@ export const POST_TYPE = {
     CREATE_POST: 'CREATE_POST',
     LOADING_POST: 'LOADING_POST',
     GET_POSTS: 'GET_POSTS',
-    UPDATE_POST: 'UPDATE_POST'
+    UPDATE_POST: 'UPDATE_POST',
+    GET_POST: 'GET_POST'
 }
 
 export const createPost = ({ content, images, authReducer }) => async (dispatch) => {
@@ -100,5 +101,20 @@ export const unlikePost = ({ post, authReducer }) => async (dispatch) => {
             type: GLOBALTYPES.ALERT,
             payload: { error: err.response.data.msg }
         });
+    }
+}
+
+export const getPost = ({ detailPostReducer, id, authReducer }) => async (dispatch) => {
+    if (detailPostReducer.every(post =>  post._id !== id)) {
+        try {
+            const res = await getDataAPI(`post/${id}`, authReducer.token);
+            dispatch({ type: POST_TYPE.GET_POST, payload: res.data.post });
+            
+        } catch (err) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: err.response.data.msg }
+            });
+        }
     }
 }

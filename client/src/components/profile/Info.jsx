@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router'
-import { getProfileUsers } from '../../redux/actions/profileAction';
+import Button from '@material-ui/core/Button';
+import React, { useEffect, useState } from 'react';
+import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 import Avatar from '../Avatar';
 import FollowBtn from '../FollowBtn';
 import EditProfile from './EditProfile';
 import Followers from './Followers';
 import Following from './Following';
-import Button from '@material-ui/core/Button';
-import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 
-const Info = () => {
-    const { id } = useParams();
-    const { authReducer, profileReducer } = useSelector(state => state);
-    const dispatch = useDispatch();
-
+const Info = ({id, authReducer, profileReducer, dispatch}) => {
     const [userData, setUserData] = useState([]);
     const [onEdit, setOnEdit] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
@@ -24,7 +17,6 @@ const Info = () => {
         if (id === authReducer.user._id) {
             setUserData([authReducer.user]);
         } else {
-            dispatch(getProfileUsers({users: profileReducer.users, id, authReducer}));
             const newData = profileReducer.users.filter(user => user._id === id);
             setUserData(newData);
         }

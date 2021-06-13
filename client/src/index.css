@@ -47,3 +47,13 @@ code {
     height: 100vh;
     overflow: hidden;
 }
+
+/* ------------------------- User Profile Posts --------------------- */
+
+.post_thumb_content div {
+    opacity: 0;
+}
+
+.post_thumb_content:hover div {
+    opacity: 1;
+}
