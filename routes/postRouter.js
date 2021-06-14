@@ -11,8 +11,11 @@ router.route('/post/:id')
     .get(auth, postController.getPost)
 
 router.route('/post/:id/like').patch(auth, postController.likePost)
+
 router.route('/post/:id/unlike').patch(auth, postController.unlikePost)
 
 router.route('/user_posts/:id').get(auth, postController.getUserPosts)
+
+router.route('/post_discover').get(auth, postController.getPostsDiscover)
 
 module.exports = router;

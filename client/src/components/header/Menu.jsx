@@ -2,13 +2,13 @@
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import QuestionAnswerOutlinedIcon from '@material-ui/icons/QuestionAnswerOutlined';
+import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 // React
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import Avatar from '../Avatar';
 // Redux
 import { useSelector } from 'react-redux';
-import Setting from './Setting';
 
 const Menu = () => {
     const { authReducer } = useSelector(state => state);
@@ -37,6 +37,12 @@ const Menu = () => {
             label: 'Notify', 
             icon: <FavoriteBorderOutlinedIcon id="Notify" fontSize="large" color={isActive('/notify') && 'primary'} />, 
             path: '/notify' 
+        },
+        
+        { 
+            label: 'Discover', 
+            icon: <ExploreOutlinedIcon id="Discover" fontSize="large" color={isActive('/discover') && 'primary'} />, 
+            path: '/discover' 
         }
     ]
     
@@ -53,8 +59,6 @@ const Menu = () => {
                     ))
                     
                 }
-
-                <Setting className="cursor-pointer" />
 
                 <li className="nav-item">
                     <Link className="nav-link" to={`/profile/${authReducer.user._id}`}>

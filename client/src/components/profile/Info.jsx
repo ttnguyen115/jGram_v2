@@ -6,6 +6,7 @@ import FollowBtn from '../FollowBtn';
 import EditProfile from './EditProfile';
 import Followers from './Followers';
 import Following from './Following';
+import Setting from '../header/Setting';
 
 const Info = ({id, authReducer, profileReducer, dispatch}) => {
     const [userData, setUserData] = useState([]);
@@ -46,6 +47,9 @@ const Info = ({id, authReducer, profileReducer, dispatch}) => {
                                     : <FollowBtn user={user} />
                                 }
                                 
+                                {
+                                    user._id === authReducer.user._id && <Setting className="cursor-pointer" />
+                                }
                             </div>
 
                             <div className="font-medium text-violet">

@@ -7,6 +7,7 @@ import statusReducer from './statusReducer';
 import postReducer from './postReducer';
 import modalReducer from './modalReducer';
 import detailPostReducer from './detailPostReducer';
+import discoverReducer from './discoverReducer';
 
 export default combineReducers({
     authReducer,
@@ -17,4 +18,5 @@ export default combineReducers({
     postReducer,
     modalReducer,
     detailPostReducer,
+    discoverReducer,
 })
