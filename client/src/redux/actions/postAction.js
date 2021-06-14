@@ -1,13 +1,14 @@
 import { GLOBALTYPES } from "./globalTypes"
 import { imageUpload } from '../../api/imageUpload';
-import { getDataAPI, postDataAPI, patchDataAPI } from '../../api/fetchData';
+import { getDataAPI, postDataAPI, patchDataAPI, deleteDataAPI } from '../../api/fetchData';
 
 export const POST_TYPE = {
     CREATE_POST: 'CREATE_POST',
     LOADING_POST: 'LOADING_POST',
     GET_POSTS: 'GET_POSTS',
     UPDATE_POST: 'UPDATE_POST',
-    GET_POST: 'GET_POST'
+    GET_POST: 'GET_POST',
+    DELETE_POST: 'DELETE_POST'
 }
 
 export const createPost = ({ content, images, authReducer }) => async (dispatch) => {
@@ -116,5 +117,19 @@ export const getPost = ({ detailPostReducer, id, authReducer }) => async (dispat
                 payload: { error: err.response.data.msg }
             });
         }
+    }
+}
+
+export const deletePost = ({ post, authReducer }) => async (dispatch) => {
+    dispatch({ type: POST_TYPE.DELETE_POST, payload: post });
+
+    try {
+        await deleteDataAPI(`post/${post._id}`, authReducer.token);
+
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        });
     }
 }

@@ -4,14 +4,17 @@ import ShareIcon from '@material-ui/icons/Share';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { BASE_URL } from '../../../api/config';
 import { likePost, unlikePost } from '../../../redux/actions/postAction';
 import LikeBtn from '../../LikeBtn';
+import ShareModal from '../../ShareModal';
 
 const CardFooter = ({post}) => {
     const dispatch = useDispatch();
-    const { authReducer } = useSelector(state => state);
+    const { authReducer, themeReducer } = useSelector(state => state);
     const [isLike, setIsLike] = useState(false);
     const [loadLike, setLoadLike] = useState(false);
+    const [isShare, setIsShare] = useState(false);
 
     useEffect(() => {
         if (post.likes.find(like => like._id === authReducer.user._id)) {
@@ -47,7 +50,7 @@ const CardFooter = ({post}) => {
                         <ChatBubbleOutlineIcon fontSize="large"  />
                     </Link>
 
-                    <ShareIcon className="m-2" fontSize="large" />
+                    <ShareIcon className="m-2" fontSize="large" onClick={() => setIsShare(!isShare)} />
                 </div>
                 
                 <BookmarkBorderIcon fontSize="large" />
@@ -58,6 +61,11 @@ const CardFooter = ({post}) => {
                         
                 <h6 className="px-8 font-semibold curor-pointer">{post.comments.length} comments</h6>
             </div>
+
+            {
+                isShare && 
+                <ShareModal url={`${BASE_URL}/post/${post._id}`} themeReducer={themeReducer} />
+            }
         </div>
     )
 }

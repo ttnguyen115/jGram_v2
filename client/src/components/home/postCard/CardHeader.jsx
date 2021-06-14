@@ -5,16 +5,31 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import moment from 'moment';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import Avatar from '../../Avatar';
+import { Link, useHistory } from 'react-router-dom';
+import { BASE_URL } from '../../../api/config';
 import { GLOBALTYPES } from '../../../redux/actions/globalTypes';
+import { deletePost } from '../../../redux/actions/postAction';
+import Avatar from '../../Avatar';
 
 const CardHeader = ({post}) => {
     const { authReducer } = useSelector(state => state);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const handleEdit = () => {
         dispatch({ type: GLOBALTYPES.STATUS, payload: { ...post, onEdit: true } })
+    }
+
+    const handleDelete = () => {
+        if (window.confirm("Are you sure to delete this post?")) {
+            dispatch(deletePost({ post, authReducer }));
+        }
+        
+        return history.push('/');
+    }
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(`${BASE_URL}/post/${post._id}`)
     }
 
     return (
@@ -47,15 +62,16 @@ const CardHeader = ({post}) => {
                             >
                                 <span><EditIcon /></span> Edit Post
                             </div>
-                            <div className="flex my-1 dropdown-item"
                             
+                            <div className="flex my-1 dropdown-item"
+                                onClick={handleDelete}
                             >
                                 <span><DeleteIcon /></span> Remove Post
                             </div>
                         </>
                     }
 
-                    <div className="flex my-1 dropdown-item">
+                    <div className="flex my-1 dropdown-item" onClick={handleCopyLink} >
                         <span><FileCopyOutlinedIcon /></span> Copy Link
                     </div>
                 </div>

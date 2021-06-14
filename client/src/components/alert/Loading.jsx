@@ -11,6 +11,7 @@ const useStyles = makeStyles({
 
     bar: {
         backgroundColor: '#000',
+        width: '100%',
     }
 });
 
