@@ -19,4 +19,10 @@ router.route('/user_posts/:id').get(auth, postController.getUserPosts)
 
 router.route('/post_discover').get(auth, postController.getPostsDiscover)
 
+router.route('/savePost/:id').patch(auth, postController.savePost)
+
+router.route('/unsavePost/:id').patch(auth, postController.unsavePost)
+
+router.route('/getSavePosts').get(auth, postController.getSavePost)
+
 module.exports = router;
