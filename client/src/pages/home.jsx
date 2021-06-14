@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import Posts from '../components/home/Posts'
 import Status from '../components/home/Status'
 import Loading from '../components/alert/Loading';
+import RightSideBar from '../components/home/RightSideBar';
 
 const Home = () => {
     const { postReducer } = useSelector(state => state);
@@ -15,14 +16,14 @@ const Home = () => {
                 {
                     postReducer.Loading
                     ? <Loading />
-                    : postReducer.result === 0 
+                    : (postReducer.result === 0 || postReducer.posts.length === 0)
                         ? <h2 className="font-bold text-center">No Post</h2> 
                         : <Posts />
                 }
             </div>
             
             <div className="col-md-4">
-                Right side
+                <RightSideBar />
             </div>
         </div>
     )

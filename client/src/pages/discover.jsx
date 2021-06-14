@@ -21,7 +21,7 @@ const Discover = () => {
 
     const handleLoadMore = async () => {
         setLoad(true);
-        const res = await getDataAPI(`post_discover?limit=${discoverReducer.page * 9}`, authReducer.token);
+        const res = await getDataAPI(`post_discover?num=${discoverReducer.page * 9}`, authReducer.token);
         dispatch({ type: DISCOVER_TYPES.UPDATE_POST, payload: res.data });
         setLoad(false);
     }
