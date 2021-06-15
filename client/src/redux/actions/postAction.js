@@ -1,6 +1,7 @@
-import { GLOBALTYPES } from "./globalTypes"
+import { deleteDataAPI, getDataAPI, patchDataAPI, postDataAPI } from '../../api/fetchData';
 import { imageUpload } from '../../api/imageUpload';
-import { getDataAPI, postDataAPI, patchDataAPI, deleteDataAPI } from '../../api/fetchData';
+import { GLOBALTYPES } from "./globalTypes";
+import { createNotify, deleteNotify } from "./notifyAction";
 
 export const POST_TYPE = {
     CREATE_POST: 'CREATE_POST',
@@ -11,8 +12,9 @@ export const POST_TYPE = {
     DELETE_POST: 'DELETE_POST'
 }
 
-export const createPost = ({ content, images, authReducer }) => async (dispatch) => {
+export const createPost = ({ content, images, authReducer, socketReducer }) => async (dispatch) => {
     let media = [];
+
     try {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
         
@@ -25,6 +27,18 @@ export const createPost = ({ content, images, authReducer }) => async (dispatch)
         });
 
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } });
+
+        //  Notify
+        const msg = {
+            id: res.data.newPost._id,
+            text: 'Upload a new post.',
+            recipients: res.data.newPost.user.followers,
+            url: `/post/${res.data.newPost._id}`,
+            content,
+            image: media[0].url,
+        }
+
+        dispatch(createNotify({ msg, authReducer, socketReducer }));
 
     } catch (err) {
         dispatch({
@@ -124,11 +138,21 @@ export const getPost = ({ detailPostReducer, id, authReducer }) => async (dispat
     }
 }
 
-export const deletePost = ({ post, authReducer }) => async (dispatch) => {
+export const deletePost = ({ post, authReducer, socketReducer }) => async (dispatch) => {
     dispatch({ type: POST_TYPE.DELETE_POST, payload: post });
 
     try {
-        await deleteDataAPI(`post/${post._id}`, authReducer.token);
+        const res = await deleteDataAPI(`post/${post._id}`, authReducer.token);
+
+        //  Notify
+        const msg = {
+            id: post._id,
+            text: 'Deleted a new post.',
+            recipients: res.data.newPost.user.followers,
+            url: `/post/${post._id}`
+        }
+
+        dispatch(deleteNotify({ msg, authReducer, socketReducer }));
 
     } catch (err) {
         dispatch({

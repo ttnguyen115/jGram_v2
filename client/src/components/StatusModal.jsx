@@ -9,7 +9,7 @@ import { createPost, updatePost } from '../redux/actions/postAction';
 import { useEffect } from 'react';
 
 const StatusModal = () => {
-    const { authReducer, themeReducer, statusReducer } = useSelector(state => state);
+    const { authReducer, themeReducer, statusReducer, socketReducer } = useSelector(state => state);
     const dispatch = useDispatch();
 
     const [content, setContent] = useState('');
@@ -88,7 +88,7 @@ const StatusModal = () => {
         if (statusReducer.onEdit) {
             dispatch(updatePost({ content, images, authReducer, statusReducer }));
         } else {
-            dispatch(createPost({ content, images, authReducer }));
+            dispatch(createPost({ content, images, authReducer, socketReducer }));
         }
 
         setContent('');
