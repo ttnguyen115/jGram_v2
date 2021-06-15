@@ -97,7 +97,7 @@ export const updateProfileUser = ({userData, avatar, authReducer}) => async (dis
     }
 }
 
-export const follow = ({ users, user, authReducer }) => async (dispatch) => {
+export const follow = ({ users, user, authReducer, socketReducer }) => async (dispatch) => {
     let newUser;
     
     if (users.every(item => item._id !== user._id)) {
@@ -123,8 +123,12 @@ export const follow = ({ users, user, authReducer }) => async (dispatch) => {
         } 
     });
 
+    
+
     try {
-        await patchDataAPI(`user/${user._id}/follow`, null, authReducer.token);
+        const res = await patchDataAPI(`user/${user._id}/follow`, null, authReducer.token);
+        socketReducer.emit('follow', res.data.newUser);
+
     } catch (err) {
         dispatch({
             type: GLOBALTYPES.ALERT,
@@ -133,7 +137,7 @@ export const follow = ({ users, user, authReducer }) => async (dispatch) => {
     }
 }
 
-export const unfollow = ({ users, user, authReducer }) => async (dispatch) => {
+export const unfollow = ({ users, user, authReducer, socketReducer }) => async (dispatch) => {
     let newUser;
 
     if (users.every(item => item._id !== user._id)) {
@@ -160,7 +164,8 @@ export const unfollow = ({ users, user, authReducer }) => async (dispatch) => {
     });
 
     try {
-        await patchDataAPI(`user/${user._id}/unfollow`, null, authReducer.token);
+        const res = await patchDataAPI(`user/${user._id}/unfollow`, null, authReducer.token);
+        socketReducer.emit('unfollow', res.data.newUser);
     } catch (err) {
         dispatch({
             type: GLOBALTYPES.ALERT,

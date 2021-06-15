@@ -2,7 +2,7 @@ import { patchDataAPI, postDataAPI, deleteDataAPI } from '../../api/fetchData';
 import { EditData, GLOBALTYPES, DeleteData } from './globalTypes';
 import { POST_TYPE } from './postAction';
 
-export const createComment = ({post, newComment, authReducer}) => async (dispatch) => {
+export const createComment = ({post, newComment, authReducer, socketReducer}) => async (dispatch) => {
     const newPost = {...post, comments: [...post.comments, newComment]};
 
     dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost });
@@ -15,6 +15,9 @@ export const createComment = ({post, newComment, authReducer}) => async (dispatc
         const newPost = {...post, comments: [...post.comments, newData]};
         
         dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost });
+
+        // Socket.io
+        socketReducer.emit('createComment', newPost)
 
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
@@ -67,7 +70,7 @@ export const unlikeComment = ({comment, post, authReducer}) => async (dispatch) 
     }
 }
 
-export const deleteComment = ({post, comment, authReducer}) => async (dispatch) => {
+export const deleteComment = ({post, comment, authReducer, socketReducer}) => async (dispatch) => {
     const deleteArr = [...post.comments.filter(cm => cm.reply === comment._id), comment];
     
     const newPost = {
@@ -76,6 +79,8 @@ export const deleteComment = ({post, comment, authReducer}) => async (dispatch) 
     }
 
     dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost });
+
+    socketReducer.emit('deleteComment', newPost);
 
     try {
         deleteArr.forEach(item => {

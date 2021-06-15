@@ -93,9 +93,11 @@ export const likePost = ({ post, authReducer, socketReducer }) => async (dispatc
     }
 }
 
-export const unlikePost = ({ post, authReducer }) => async (dispatch) => {
+export const unlikePost = ({ post, authReducer, socketReducer }) => async (dispatch) => {
     const newPost = { ...post, likes: post.likes.filter(like => like._id !== authReducer.user._id) }
     dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost })
+
+    socketReducer.emit('unlikePost', newPost);
     
     try {
         await patchDataAPI(`post/${post._id}/unlike`, null, authReducer.token)

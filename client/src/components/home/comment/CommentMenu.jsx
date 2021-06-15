@@ -7,11 +7,11 @@ import { deleteComment } from '../../../redux/actions/commentAction';
 
 const CommentMenu = ({post, comment, setOnEdit}) => {
     const dispatch = useDispatch();
-    const { authReducer } = useSelector(state => state);
+    const { authReducer, socketReducer } = useSelector(state => state);
 
     const handleRemove = () => {
         if (post.user._id === authReducer.user._id || comment.user._id === authReducer.user._id) {
-            dispatch(deleteComment({ post, authReducer, comment }));
+            dispatch(deleteComment({ post, authReducer, comment, socketReducer }));
         }
     }
     
