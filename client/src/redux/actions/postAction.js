@@ -77,9 +77,11 @@ export const updatePost = ({ content, images, authReducer, statusReducer }) => a
     }
 }
 
-export const likePost = ({ post, authReducer }) => async (dispatch) => {
+export const likePost = ({ post, authReducer, socketReducer }) => async (dispatch) => {
     const newPost = { ...post, likes: [...post.likes, authReducer.user] }
-    dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost })
+    dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost });
+
+    socketReducer.emit('likePost', newPost);
 
     try {
         await patchDataAPI(`post/${post._id}/like`, null, authReducer.token)

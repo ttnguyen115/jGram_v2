@@ -16,6 +16,10 @@ import Register from './pages/register';
 import { refreshToken } from './redux/actions/authAction';
 import { getPosts } from './redux/actions/postAction';
 import { getSuggestions } from './redux/actions/suggestionAction';
+import { GLOBALTYPES } from './redux/actions/globalTypes';
+
+import io from 'socket.io-client';
+import SocketClient from './SocketClient';
 
 function App() {
   const { authReducer, statusReducer, modalReducer } = useSelector(state => state);
@@ -23,13 +27,15 @@ function App() {
 
   useEffect(() => {
     dispatch(refreshToken());
+    const socket = io();
+    dispatch({ type: GLOBALTYPES.SOCKET, payload: socket });
+    return () => socket.close();
   }, [dispatch]);
   
   useEffect(() => {
     if (authReducer.token) {
       dispatch(getPosts(authReducer.token));
       dispatch(getSuggestions(authReducer.token));
-      
     }
   }, [dispatch, authReducer.token]);
 
@@ -42,6 +48,7 @@ function App() {
         <div className="main">
           { authReducer.token && <Header /> }
           { statusReducer && <StatusModal /> }
+          { authReducer.token && <SocketClient /> }
           
           <Route exact path='/' component={ authReducer.token ? Home : Login } />
           <Route exact path='/register' component={ Register } />

@@ -12,7 +12,7 @@ import ShareModal from '../../ShareModal';
 
 const CardFooter = ({post}) => {
     const dispatch = useDispatch();
-    const { authReducer, themeReducer } = useSelector(state => state);
+    const { authReducer, themeReducer, socketReducer } = useSelector(state => state);
     const [isLike, setIsLike] = useState(false);
     const [loadLike, setLoadLike] = useState(false);
     const [isShare, setIsShare] = useState(false);
@@ -32,7 +32,7 @@ const CardFooter = ({post}) => {
         if (loadLike) return;
         
         setLoadLike(true);
-        await dispatch(likePost({ post, authReducer }));
+        await dispatch(likePost({ post, authReducer, socketReducer }));
         setLoadLike(false);
     }
     
@@ -40,7 +40,7 @@ const CardFooter = ({post}) => {
         if (loadLike) return;
 
         setLoadLike(true);
-        await dispatch(unlikePost({ post, authReducer }));
+        await dispatch(unlikePost({ post, authReducer, socketReducer }));
         setLoadLike(false);
     }
 

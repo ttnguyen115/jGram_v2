@@ -46,7 +46,7 @@ const postController = {
             }), req.query).paginating()
 
             const posts = await features.query.sort('-createdAt')
-            .populate('user likes', 'avatar username fullname')
+            .populate('user likes', 'avatar username fullname followers')
             .populate({
                 path: 'comments',
                 populate: {

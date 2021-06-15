@@ -9,6 +9,7 @@ import modalReducer from './modalReducer';
 import detailPostReducer from './detailPostReducer';
 import discoverReducer from './discoverReducer';
 import suggestionsReducer from './suggestionsReducer';
+import socketReducer from './socketReducer';
 
 export default combineReducers({
     authReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
     detailPostReducer,
     discoverReducer,
     suggestionsReducer,
+    socketReducer,
 })
