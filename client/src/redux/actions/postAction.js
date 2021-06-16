@@ -98,7 +98,20 @@ export const likePost = ({ post, authReducer, socketReducer }) => async (dispatc
     socketReducer.emit('likePost', newPost);
 
     try {
-        await patchDataAPI(`post/${post._id}/like`, null, authReducer.token)
+        await patchDataAPI(`post/${post._id}/like`, null, authReducer.token);
+
+        //  Notify
+        const msg = {
+            id: authReducer.user._id,
+            text: 'Liked your post.',
+            recipients: [post.user._id],
+            url: `/post/${post._id}`,
+            content: post.content,
+            image: post.images[0].url,
+        }
+
+        dispatch(createNotify({ msg, authReducer, socketReducer }));
+
     } catch (err) {
         dispatch({
             type: GLOBALTYPES.ALERT,
@@ -114,7 +127,18 @@ export const unlikePost = ({ post, authReducer, socketReducer }) => async (dispa
     socketReducer.emit('unlikePost', newPost);
     
     try {
-        await patchDataAPI(`post/${post._id}/unlike`, null, authReducer.token)
+        await patchDataAPI(`post/${post._id}/unlike`, null, authReducer.token);
+
+        //  Notify
+        const msg = {
+            id: authReducer.user._id,
+            text: 'Liked your post.',
+            recipients: [post.user._id],
+            url: `/post/${post._id}`
+        }
+
+        dispatch(deleteNotify({ msg, authReducer, socketReducer }));
+
     } catch (err) {
         dispatch({
             type: GLOBALTYPES.ALERT,
@@ -147,7 +171,7 @@ export const deletePost = ({ post, authReducer, socketReducer }) => async (dispa
         //  Notify
         const msg = {
             id: post._id,
-            text: 'Deleted a new post.',
+            text: 'Upload a new post.',
             recipients: res.data.newPost.user.followers,
             url: `/post/${post._id}`
         }

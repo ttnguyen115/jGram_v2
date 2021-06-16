@@ -1,6 +1,7 @@
 import { GLOBALTYPES, DeleteData } from './globalTypes';
 import { getDataAPI, patchDataAPI } from '../../api/fetchData';
 import { imageUpload } from '../../api/imageUpload';
+import { createNotify, deleteNotify } from './notifyAction';
 
 export const PROFILE_TYPES = {
     LOADING: 'LOADING_PROFILE',
@@ -123,11 +124,19 @@ export const follow = ({ users, user, authReducer, socketReducer }) => async (di
         } 
     });
 
-    
-
     try {
         const res = await patchDataAPI(`user/${user._id}/follow`, null, authReducer.token);
         socketReducer.emit('follow', res.data.newUser);
+
+        // Notify
+        const msg = {
+            id: authReducer.user._id,
+            text: 'has followed you.',
+            recipients: [newUser._id],
+            url: `/profile/${authReducer.user._id}`,
+        }
+
+        dispatch(createNotify({ msg, authReducer, socketReducer }));
 
     } catch (err) {
         dispatch({
@@ -166,6 +175,17 @@ export const unfollow = ({ users, user, authReducer, socketReducer }) => async (
     try {
         const res = await patchDataAPI(`user/${user._id}/unfollow`, null, authReducer.token);
         socketReducer.emit('unfollow', res.data.newUser);
+
+        // Notify
+        const msg = {
+            id: authReducer.user._id,
+            text: 'has followed you.',
+            recipients: [newUser._id],
+            url: `/profile/${authReducer.user._id}`,
+        }
+
+        dispatch(deleteNotify({ msg, authReducer, socketReducer }));
+
     } catch (err) {
         dispatch({
             type: GLOBALTYPES.ALERT,

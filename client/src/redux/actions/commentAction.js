@@ -1,6 +1,7 @@
 import { patchDataAPI, postDataAPI, deleteDataAPI } from '../../api/fetchData';
 import { EditData, GLOBALTYPES, DeleteData } from './globalTypes';
 import { POST_TYPE } from './postAction';
+import { createNotify, deleteNotify } from './notifyAction';
 
 export const createComment = ({post, newComment, authReducer, socketReducer}) => async (dispatch) => {
     const newPost = {...post, comments: [...post.comments, newComment]};
@@ -17,7 +18,19 @@ export const createComment = ({post, newComment, authReducer, socketReducer}) =>
         dispatch({ type: POST_TYPE.UPDATE_POST, payload: newPost });
 
         // Socket.io
-        socketReducer.emit('createComment', newPost)
+        socketReducer.emit('createComment', newPost);
+
+        //  Notify
+        const msg = {
+            id: res.data.newComment._id,
+            text: newComment.reply ? 'mentioned you in a comment.' : 'commented on your post.',
+            recipients: newComment.reply ? [newComment.tag._id] : [post.user._id],
+            url: `/post/${post._id}`,
+            content: post.content,
+            image: post.images[0].url,
+        }
+        
+        dispatch(createNotify({ msg, authReducer, socketReducer }));
 
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
@@ -84,7 +97,17 @@ export const deleteComment = ({post, comment, authReducer, socketReducer}) => as
 
     try {
         deleteArr.forEach(item => {
-            deleteDataAPI(`comment/${item._id}`, authReducer.token)
+            deleteDataAPI(`comment/${item._id}`, authReducer.token);
+
+            // Notify
+            const msg = {
+                id: item._id,
+                text: comment.reply ? 'mentioned you in a comment.' : 'commented on your post.',
+                recipients: comment.reply ? [comment.tag._id] : [post.user._id],
+                url: `/post/${post._id}`,
+            }
+            
+            dispatch(deleteNotify({ msg, authReducer, socketReducer }));
         });
 
     } catch (err) {
