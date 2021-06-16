@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { POST_TYPE } from './redux/actions/postAction';
 import { GLOBALTYPES } from './redux/actions/globalTypes';
+import { NOTIFY_TYPES } from './redux/actions/notifyAction';
 
 const SocketClient = () => {
     const { authReducer, socketReducer } = useSelector(state => state);
@@ -62,6 +63,24 @@ const SocketClient = () => {
 
         return () => socketReducer.off('unfollowToClient')
     }, [socketReducer, dispatch, authReducer])
+    
+    // Notifications
+    useEffect(() => {
+        socketReducer.on('createNotifyToClient', msg => {
+            dispatch({ type: NOTIFY_TYPES.CREATE_NOTIFY, payload: msg })
+        });
+
+        return () => socketReducer.off('createNotifyToClient')
+    }, [socketReducer, dispatch])
+    
+    useEffect(() => {
+        socketReducer.on('deleteNotifyToClient', msg => {
+            console.log(msg);
+            dispatch({ type: NOTIFY_TYPES.REMOVE_NOTIFY, payload: msg })
+        });
+
+        return () => socketReducer.off('deleteNotifyToClient')
+    }, [socketReducer, dispatch])
 
 
     return <>

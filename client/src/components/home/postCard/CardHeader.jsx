@@ -12,7 +12,7 @@ import { deletePost } from '../../../redux/actions/postAction';
 import Avatar from '../../Avatar';
 
 const CardHeader = ({post}) => {
-    const { authReducer } = useSelector(state => state);
+    const { authReducer, socketReducer } = useSelector(state => state);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -22,11 +22,11 @@ const CardHeader = ({post}) => {
 
     const handleDelete = () => {
         if (window.confirm("Are you sure to delete this post?")) {
-            dispatch(deletePost({ post, authReducer }));
+            dispatch(deletePost({ post, authReducer, socketReducer }));
         }
         
         return history.push('/');
-    }
+     }
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(`${BASE_URL}/post/${post._id}`)

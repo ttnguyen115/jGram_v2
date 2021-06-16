@@ -13,7 +13,14 @@ export const NOTIFY_TYPES = {
 export const createNotify = ({msg, authReducer, socketReducer}) => async (dispatch) => {
     try {
         const res = await postDataAPI('notify', msg, authReducer.token);
-        console.log(res);
+       
+        socketReducer.emit('createNotify', {
+            ...res.data.notify,
+            user: {
+                username: authReducer.user.username,
+                avatar: authReducer.user.avatar
+            }
+        });
         
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } });
@@ -22,8 +29,9 @@ export const createNotify = ({msg, authReducer, socketReducer}) => async (dispat
 
 export const deleteNotify = ({msg, authReducer, socketReducer}) => async (dispatch) => {
     try {
-        const res = await deleteDataAPI(`notify/${msg.id}?url=${msg.url}`, authReducer.token);
-        console.log(res);
+        await deleteDataAPI(`notify/${msg.id}?url=${msg.url}`, authReducer.token);
+        
+        socketReducer.emit('deleteNotify', msg);
 
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } });
