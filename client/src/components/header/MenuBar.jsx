@@ -1,18 +1,31 @@
 // Material UI
-import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import QuestionAnswerOutlinedIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
+import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
 // React
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import Avatar from '../Avatar';
+import NotifyModal from '../NotifyModal';
 // Redux
 import { useSelector } from 'react-redux';
 
-const Menu = () => {
-    const { authReducer } = useSelector(state => state);
+const MenuBar = () => {
+    const { authReducer, notifyReducer } = useSelector(state => state);
     const { pathname } = useLocation();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     
     const isActive = (pn) => {
         if (pathname === pn) {
@@ -33,11 +46,11 @@ const Menu = () => {
             path: '/message' 
         },
         
-        { 
-            label: 'Notify', 
-            icon: <FavoriteBorderOutlinedIcon id="Notify" fontSize="large" color={isActive('/notify') && 'primary'} />, 
-            path: '/notify' 
-        },
+        // { 
+        //     label: 'Notify', 
+        //     icon: <FavoriteBorderOutlinedIcon id="Notify" fontSize="large" color={isActive('/notify') && 'primary'} />, 
+        //     path: '/notify' 
+        // },
         
         { 
             label: 'Discover', 
@@ -57,8 +70,26 @@ const Menu = () => {
                             </Link>
                         </li>
                     ))
-                    
                 }
+                
+                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}
+                    className={`px-2 nav-item ${notifyReducer.data.length > 0 ? 'opacity-100' : 'opacity-50'}`}
+                >
+                    <Badge badgeContent={notifyReducer.data.length} color="error">
+                        <FavoriteBorderIcon id="Notify" fontSize="large" />
+                    </Badge>
+                </Button>
+                
+                <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+                    <NotifyModal />
+                </Menu>
+                
 
                 <li className="nav-item">
                     <Link className="nav-link" to={`/profile/${authReducer.user._id}`}>
@@ -70,4 +101,4 @@ const Menu = () => {
     )
 }
 
-export default Menu
+export default MenuBar

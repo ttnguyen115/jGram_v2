@@ -1,9 +1,8 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import Posts from '../components/home/Posts'
-import Status from '../components/home/Status'
+import React from 'react';
+import { useSelector } from 'react-redux';
 import Loading from '../components/alert/Loading';
-import RightSideBar from '../components/home/RightSideBar';
+import Posts from '../components/home/Posts';
+import Status from '../components/home/Status';
 
 const Home = () => {
     const { postReducer } = useSelector(state => state);
@@ -20,10 +19,6 @@ const Home = () => {
                         ? <h2 className="font-bold text-center">No Post</h2> 
                         : <Posts />
                 }
-            </div>
-            
-            <div className="col-md-4">
-                <RightSideBar />
             </div>
         </div>
     )

@@ -6,4 +6,6 @@ router.post('/notify', auth, notifyController.createNotify)
 
 router.delete('/notify/:id', auth, notifyController.deleteNotify)
 
+router.get('/notifies', auth, notifyController.getNotifies)
+
 module.exports = router

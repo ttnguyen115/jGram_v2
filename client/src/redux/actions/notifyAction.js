@@ -1,4 +1,4 @@
-import { postDataAPI, deleteDataAPI } from '../../api/fetchData';
+import { postDataAPI, deleteDataAPI, getDataAPI } from '../../api/fetchData';
 import { GLOBALTYPES } from './globalTypes';
 
 export const NOTIFY_TYPES = {
@@ -25,6 +25,17 @@ export const deleteNotify = ({msg, authReducer, socketReducer}) => async (dispat
         const res = await deleteDataAPI(`notify/${msg.id}?url=${msg.url}`, authReducer.token);
         console.log(res);
 
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } });
+    }
+}
+
+export const getNotifies = (token) => async (dispatch) => {
+    try {
+        const res = await getDataAPI('notifies', token);
+        console.log(res);
+        dispatch({ type: NOTIFY_TYPES.GET_NOTIFIES, payload: res.data.notifies });
+        
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } });
     }

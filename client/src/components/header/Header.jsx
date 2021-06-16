@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Menu from './Menu';
+import MenuBar from './MenuBar';
 import Search from './Search';
 
 const Header = () => {
@@ -15,7 +15,7 @@ const Header = () => {
 
                 <Search />
 
-                <Menu />
+                <MenuBar />
             </nav>
         </div>
     )
