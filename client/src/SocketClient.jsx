@@ -4,6 +4,19 @@ import { POST_TYPE } from './redux/actions/postAction';
 import { GLOBALTYPES } from './redux/actions/globalTypes';
 import { NOTIFY_TYPES } from './redux/actions/notifyAction';
 
+const spawnNotifications = (body, icon, url, title) => {
+    let options = {
+        body, icon
+    };
+    let n = new Notification(title, options);
+
+    n.onclick = e => {
+        e.preventDefault();
+
+        window.open(url, '_blank');
+    }
+}
+
 const SocketClient = () => {
     const { authReducer, socketReducer } = useSelector(state => state);
     const dispatch = useDispatch()
@@ -68,6 +81,12 @@ const SocketClient = () => {
     useEffect(() => {
         socketReducer.on('createNotifyToClient', msg => {
             dispatch({ type: NOTIFY_TYPES.CREATE_NOTIFY, payload: msg })
+            spawnNotifications(
+                msg.user.username + ' ' + msg.text,
+                msg.user.avatar,
+                msg.url,
+                'jGram v2.0'
+            )
         });
 
         return () => socketReducer.off('createNotifyToClient')
@@ -84,7 +103,7 @@ const SocketClient = () => {
 
 
     return <>
-
+        
     </>
 }
 

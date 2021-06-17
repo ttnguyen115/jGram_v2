@@ -40,7 +40,7 @@ function App() {
       dispatch(getSuggestions(authReducer.token));
       dispatch(getNotifies(authReducer.token));
     }
-  }, [dispatch, authReducer.token]);
+  }, [dispatch, authReducer.token]); 
 
   return (
     <Router>

@@ -3,11 +3,25 @@ import moment from 'moment';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { deleteAllNotifies, isReadNotify } from '../redux/actions/notifyAction';
 import Avatar from './Avatar';
 
 const NotifyModal = () => {
     const dispatch = useDispatch();
     const { authReducer, notifyReducer } = useSelector(state => state);
+
+    const handleIsRead = (msg) => {
+        dispatch(isReadNotify({ msg, authReducer }))
+    }
+
+    const handleDeleteAll = () => {
+        const newArr = notifyReducer.data.filter(item => item.isRead === false);
+        if (newArr.length === 0) return dispatch(deleteAllNotifies(authReducer.token));
+
+        if (window.confirm(`You have ${newArr.length} unread notices. Are you sure to delete all?`)) {
+            return dispatch(deleteAllNotifies(authReducer.token));
+        }
+    }
 
     return (
         <div className="min-w-280px">
@@ -26,7 +40,9 @@ const NotifyModal = () => {
                 {
                     notifyReducer.data.map((msg, index) => (
                         <div className="px-2 mb-3" key={index}>
-                            <Link to={`${msg.url}`} className="flex items-center" >
+                            <Link to={`${msg.url}`} className="flex items-center" 
+                                onClick={() => handleIsRead(msg)}
+                            >
                                 <Avatar size={1} src={msg.user.avatar} />
                                 
                                 <div className="mx-1 flex-fill">
@@ -57,7 +73,9 @@ const NotifyModal = () => {
 
             <hr className="my-1" />
 
-            <div className="mr-2 text-right text-red-500 cursor-pointer">
+            <div className="mr-2 text-right text-red-500 cursor-pointer"
+                onClick={handleDeleteAll}
+            >
                 Delete All
             </div>
         </div>
