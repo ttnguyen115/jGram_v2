@@ -58,3 +58,18 @@ code {
 .post_thumb_content:hover div {
     opacity: 1;
 }
+
+/* ------------------------- Message --------------------- */
+.your_message .chat_text {
+    background-color: #0048aa;
+    color: white;
+    border: 1px solid #0048aa;
+    border-radius: 14px 14px 0 14px;
+}
+
+.other_message .chat_text {
+    background-color: white;
+    color: #111;
+    border: 1px solid #ddd;
+    border-radius: 14px 14px 14px 0;
+}

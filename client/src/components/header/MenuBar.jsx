@@ -46,12 +46,6 @@ const MenuBar = () => {
             path: '/message' 
         },
         
-        // { 
-        //     label: 'Notify', 
-        //     icon: <FavoriteBorderOutlinedIcon id="Notify" fontSize="large" color={isActive('/notify') && 'primary'} />, 
-        //     path: '/notify' 
-        // },
-        
         { 
             label: 'Discover', 
             icon: <ExploreOutlinedIcon id="Discover" fontSize="large" color={isActive('/discover') && 'primary'} />, 

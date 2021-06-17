@@ -7,6 +7,8 @@ module.exports = {
         '3px': '3px',
         '7px': '7px',
         '30px': '30px',
+        '49px': '49px',
+        '60px': '60px',
         '70px': '70px',
         '300px': '300px',
         '350px': '350px',
@@ -15,7 +17,7 @@ module.exports = {
 
       gridTemplateColumns: {
         'status': 'repeat(auto-fill, minmax(100px, 1fr))',
-        'posts': 'repeat(auto-fill, minmax(300px, 1fr))'
+        'posts': 'repeat(auto-fill, minmax(300px, 1fr))',
       },
     },
 

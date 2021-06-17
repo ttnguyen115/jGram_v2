@@ -11,10 +11,10 @@ const UserCard = ({children, user, border, handleClose, setShowFollowers, setSho
     }
 
     return (
-        <div className={`flex items-center p-2 justify-between ${border}`}>
+        <div className={`flex items-center p-2 justify-between ${border} w-full`}>
             <div className="">
                 <Link to={`/profile/${user._id}`} onClick={handleCloseAll} 
-                    className="flex items-center p-2"
+                    className="flex items-center p-2 hover:no-underline"
                 >
                     <Avatar src={user.avatar} size={1} />
 
