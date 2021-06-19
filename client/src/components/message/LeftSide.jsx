@@ -1,10 +1,10 @@
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { getDataAPI } from '../../api/fetchData';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { addUser, getConversations } from '../../redux/actions/messageAction';
+import { addUser, getConversations, MESS_TYPES } from '../../redux/actions/messageAction';
 import UserCard from '../UserCard';
 
 const LeftSide = () => {
@@ -14,6 +14,9 @@ const LeftSide = () => {
     const { authReducer, messageReducer } = useSelector(state => state);
     const [search, setSearch] = useState('');
     const [searchUsers, setSearchUsers] = useState([]);
+    const pageEnd = useRef();
+    const [page, setPage] = useState(0);
+    
 
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -32,17 +35,38 @@ const LeftSide = () => {
         setSearch('');
         setSearchUsers([]);
         dispatch(addUser({ user, messageReducer }));
+        // dispatch({type: MESS_TYPES.ADD_USER, payload: {...user, text: '', media: []}})
         return history.push(`/message/${user._id}`);
     }
 
     const isActive = (user) => {
-        if (id === user._id) return 'active'
+        if (id === user._id) return 'active';
+        return '';
     }
 
     useEffect(() => {
         if (messageReducer.firstLoad) return;
         dispatch(getConversations({ authReducer }));
-    }, [authReducer, messageReducer.firstLoad, dispatch])
+    }, [authReducer, messageReducer.firstLoad, dispatch]);
+
+    // Load more btn
+    useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+           if (entries[0].isIntersecting) {
+            setPage(p => p + 1);
+           } 
+        }, {
+            threshold: 0.1
+        });
+
+        observer.observe(pageEnd.current);
+    }, [setPage]);
+
+    useEffect(() => {
+        if (messageReducer.resultUsers >= (page - 1) * 9 && page > 1) {
+            dispatch(getConversations({ authReducer, page }))
+        }
+    }, [dispatch, authReducer, messageReducer.resultUsers, page]);
 
     return (
         <>
@@ -91,6 +115,8 @@ const LeftSide = () => {
                         }
                     </>
                 }
+
+                <button ref={pageEnd} className="opacity-0">Load More</button>
             </div>
         </>
     )

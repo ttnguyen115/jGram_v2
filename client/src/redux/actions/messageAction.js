@@ -17,6 +17,8 @@ export const addUser = ({user, messageReducer}) => async (dispatch) => {
 export const addMessage = ({msg, authReducer, socketReducer}) => async (dispatch) => {
     dispatch({ type: MESS_TYPES.ADD_MESSAGE, payload: msg });
 
+    socketReducer.emit('addMessage', msg);
+
     try {
         await postDataAPI('message', msg, authReducer.token);
     } catch (err) {
@@ -24,14 +26,14 @@ export const addMessage = ({msg, authReducer, socketReducer}) => async (dispatch
     }
 }
 
-export const getConversations = ({authReducer}) => async (dispatch) => {
+export const getConversations = ({authReducer, page = 1}) => async (dispatch) => {
     try {
-        const res = await getDataAPI('conversations', authReducer.token)
+        const res = await getDataAPI(`conversations?limit=${page * 9}`, authReducer.token)
         let newArr = [];
         
         res.data.conversations.forEach(item => {
             item.recipients.forEach(cv => {
-                if (cv._id === authReducer.user._id) {
+                if (cv._id !== authReducer.user._id) {
                     newArr.push({ ...cv, content: item.content, media: item.media })
                 }
             })
@@ -47,9 +49,9 @@ export const getConversations = ({authReducer}) => async (dispatch) => {
     }
 }
 
-export const getMessages = ({authReducer, id}) => async (dispatch) => {
+export const getMessages = ({authReducer, id, page = 1}) => async (dispatch) => {
     try {
-        const res = await getDataAPI(`message/${id}`, authReducer.token);
+        const res = await getDataAPI(`message/${id}?limit=${page * 9}`, authReducer.token);
         dispatch({ type: MESS_TYPES.GET_MESSAGES, payload: res.data })
 
     } catch (err) {

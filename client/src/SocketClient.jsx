@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { POST_TYPE } from './redux/actions/postAction';
 import { GLOBALTYPES } from './redux/actions/globalTypes';
 import { NOTIFY_TYPES } from './redux/actions/notifyAction';
+import { MESS_TYPES } from './redux/actions/messageAction';
 
 const spawnNotifications = (body, icon, url, title) => {
     let options = {
@@ -101,6 +102,14 @@ const SocketClient = () => {
         return () => socketReducer.off('deleteNotifyToClient')
     }, [socketReducer, dispatch])
 
+    // Message
+    useEffect(() => {
+        socketReducer.on('addMessageToClient', msg => {
+            dispatch({ type: MESS_TYPES.ADD_MESSAGE, payload: msg })
+        })
+
+        return () => socketReducer.off('addMessageToClient')
+    }, [socketReducer, dispatch])
 
     return <>
         

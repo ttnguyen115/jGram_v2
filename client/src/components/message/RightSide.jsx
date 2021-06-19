@@ -2,32 +2,42 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import NearMeIcon from '@material-ui/icons/NearMe';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { imageUpload } from '../../api/imageUpload';
 import { imageShow } from '../../api/mediaShow';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { addMessage, getMessages } from '../../redux/actions/messageAction';
+import { addMessage, getMessages, MESS_TYPES } from '../../redux/actions/messageAction';
 // import Icons from '../Icons';
 import UserCard from '../UserCard';
 import MsgDisplay from './MsgDispay';
-
 
 const RightSide = () => {
     const { authReducer, messageReducer, socketReducer } = useSelector(state => state);
     const dispatch = useDispatch();
     const { id } = useParams();
+    const refDisplay = useRef();
+    const pageEnd = useRef();
+    
     const [user, setUser] = useState([]);
     const [content, setContent] = useState('');
     const [images, setImages] = useState([]);
     const [loadImage, setLoadImage] = useState(false);
+    const [page, setPage] = useState(0);
+    const [data, setData] = useState([]);
+    
+    useEffect(() => {
+        const newData = messageReducer.data.filter(item => 
+            item.sender === authReducer.user._id || item.sender === id
+        )
+        setData(newData);
+        
+    }, [messageReducer.data, id, authReducer.user._id]);
 
     useEffect(() => {
         const newUser = messageReducer.users.find(user => user._id === id);
-        if (newUser) {
-            setUser(newUser)
-        }
+        if (newUser) setUser(newUser);
     }, [messageReducer.users, id]);
 
     const handleChangeMedia = e => {
@@ -75,18 +85,52 @@ const RightSide = () => {
             createdAt: new Date().toISOString()
         }
         setLoadImage(false);
-        dispatch(addMessage({ msg, authReducer, socketReducer }));
+        await dispatch(addMessage({ msg, authReducer, socketReducer }));
+
+        if (refDisplay.current) {
+            refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
     }
 
     useEffect(() => {
         if (id) {
             const getMessagesData = async () => {
+                dispatch({ type: MESS_TYPES.GET_MESSAGES, payload: { messages: [] } });
                 await dispatch(getMessages({ authReducer, id }));
+
+                if (refDisplay.current) {
+                    refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
             }
 
             getMessagesData();
         }
     }, [dispatch, authReducer, id])
+
+    // Load more btn
+    useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+           if (entries[0].isIntersecting) {
+            setPage(p => p + 1);
+           } 
+        }, {
+            threshold: 0.1
+        });
+
+        observer.observe(pageEnd.current);
+    }, [setPage]);
+
+    useEffect(() => {
+        if (messageReducer.resultData >= (page - 1) * 9 && page > 1) {
+            dispatch(getMessages({ authReducer, id, page }))
+        }
+    }, [dispatch, id, authReducer, messageReducer.resultData, page]);
+
+    useEffect(() => {
+        if (refDisplay.current) {
+            refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+    }, [content]);
 
     return (
         <>
@@ -101,9 +145,11 @@ const RightSide = () => {
 
             <div className="w-full px-2 overflow-y-auto" 
                 style={{height: images.length > 0 ? 'calc(100% - 180px)' : 'calc(100% - 110px)'}}>
-                <div className="flex flex-col justify-end w-full min-h-full">
+                <div className="flex flex-col justify-end w-full min-h-full" ref={refDisplay}>
+                    <button className="-mt-4 opacity-0" ref={pageEnd}>Load more</button>
+                    
                     {
-                        messageReducer.data.map((msg, index) => (
+                        data.map((msg, index) => (
                             <div className="" key={index}>
                                 {
                                     msg.sender !== authReducer.user._id && 
