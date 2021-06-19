@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { getDataAPI } from '../../api/fetchData';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { addUser, getConversations, MESS_TYPES } from '../../redux/actions/messageAction';
+import { addUser, getConversations } from '../../redux/actions/messageAction';
 import UserCard from '../UserCard';
 
 const LeftSide = () => {

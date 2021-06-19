@@ -8,7 +8,7 @@ import { useParams } from 'react-router';
 import { imageUpload } from '../../api/imageUpload';
 import { imageShow } from '../../api/mediaShow';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { addMessage, getMessages, MESS_TYPES } from '../../redux/actions/messageAction';
+import { addMessage, getMessages, loadMoreMessages } from '../../redux/actions/messageAction';
 // import Icons from '../Icons';
 import UserCard from '../UserCard';
 import MsgDisplay from './MsgDispay';
@@ -24,20 +24,30 @@ const RightSide = () => {
     const [content, setContent] = useState('');
     const [images, setImages] = useState([]);
     const [loadImage, setLoadImage] = useState(false);
-    const [page, setPage] = useState(0);
     const [data, setData] = useState([]);
+    const [result, setResult] = useState(9);
+    const [page, setPage] = useState(0);
+    const [isLoadMore, setIsLoadMore] = useState(false);
     
     useEffect(() => {
-        const newData = messageReducer.data.filter(item => 
-            item.sender === authReducer.user._id || item.sender === id
-        )
-        setData(newData);
+        const newData = messageReducer.data.find(item => item._id === id);
+        if (newData) {
+            setData(newData.messages);
+            setResult(newData.result);
+            setPage(newData.page);
+        }
         
-    }, [messageReducer.data, id, authReducer.user._id]);
+    }, [messageReducer.data, id]);
 
     useEffect(() => {
-        const newUser = messageReducer.users.find(user => user._id === id);
-        if (newUser) setUser(newUser);
+        if (id && messageReducer.users.length > 0) {
+            setTimeout(() => {
+                refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 50);
+            
+            const newUser = messageReducer.users.find(user => user._id === id);
+            if (newUser) setUser(newUser);
+        }
     }, [messageReducer.users, id]);
 
     const handleChangeMedia = e => {
@@ -93,44 +103,41 @@ const RightSide = () => {
     }
 
     useEffect(() => {
-        if (id) {
-            const getMessagesData = async () => {
-                dispatch({ type: MESS_TYPES.GET_MESSAGES, payload: { messages: [] } });
+        const getMessagesData = async () => {
+            if(messageReducer.data.every(item => item._id !== id)){
                 await dispatch(getMessages({ authReducer, id }));
 
-                if (refDisplay.current) {
+                setTimeout(() => {
                     refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }
+                }, 50);
             }
-
-            getMessagesData();
         }
-    }, [dispatch, authReducer, id])
+
+        getMessagesData();
+    }, [dispatch, authReducer, id, messageReducer.data])
 
     // Load more btn
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
-           if (entries[0].isIntersecting) {
-            setPage(p => p + 1);
-           } 
+            if (entries[0].isIntersecting) {
+               setIsLoadMore(p => p + 1);
+            } 
         }, {
             threshold: 0.1
         });
 
         observer.observe(pageEnd.current);
-    }, [setPage]);
+    }, [setIsLoadMore]);
 
     useEffect(() => {
-        if (messageReducer.resultData >= (page - 1) * 9 && page > 1) {
-            dispatch(getMessages({ authReducer, id, page }))
+        if (isLoadMore > 1) {
+            if (result >= page * 9) {
+                dispatch(loadMoreMessages({ authReducer, id, page: page + 1 }));
+                setIsLoadMore(1);
+            }
         }
-    }, [dispatch, id, authReducer, messageReducer.resultData, page]);
-
-    useEffect(() => {
-        if (refDisplay.current) {
-            refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-        }
-    }, [content]);
+        // eslint-disable-next-line
+    }, [isLoadMore]);
 
     return (
         <>
@@ -161,7 +168,7 @@ const RightSide = () => {
                                 {
                                     msg.sender === authReducer.user._id && 
                                     <div className="grid justify-end mt-2 justify-items-end your_message" style={{gridTemplateColumns: '70%'}} >
-                                        <MsgDisplay user={authReducer.user} msg={msg} />
+                                        <MsgDisplay user={authReducer.user} msg={msg} data={data} />
                                     </div>
                                 }
                             </div>

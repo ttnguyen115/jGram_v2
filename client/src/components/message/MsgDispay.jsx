@@ -1,8 +1,20 @@
-import React from 'react'
-import Avatar from '../Avatar'
-import { imageShow } from '../../api/mediaShow'
+import DeleteIcon from '@material-ui/icons/Delete';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { imageShow } from '../../api/mediaShow';
+import { deleteMessages } from '../../redux/actions/messageAction';
+import Avatar from '../Avatar';
 
-const MsgDisplay = ({user, msg}) => {
+const MsgDisplay = ({user, msg, data}) => {
+    const dispatch = useDispatch();
+    const { authReducer } = useSelector(state => state);
+
+    const handleDeleteMessages = () => {
+        if (data) {
+            dispatch(deleteMessages({ msg, data, authReducer }))
+        }
+    }
+
     return (
         <>
             <div className="flex mb-1">
@@ -10,15 +22,21 @@ const MsgDisplay = ({user, msg}) => {
                 <span>{user.username}</span>
             </div>
 
-            { msg.content && <div className="px-3 py-2 mb-1 chat_text">{msg.content}</div> }
+            <div className="flex items-center your_message">
+                { user._id === authReducer.user._id && <DeleteIcon color="primary" onClick={handleDeleteMessages} /> }
+                
+                <div className="">
+                    { msg.content && <div className="px-3 py-2 mb-1 chat_text">{msg.content}</div> }
 
-            {
-                msg.media.map((image, index) => (
-                    <div key={index}>
-                        {imageShow(image.url)}
-                    </div>
-                ))
-            }
+                    {
+                        msg.media.map((image, index) => (
+                            <div key={index}>
+                                {imageShow(image.url)}
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
 
             <div className="text-gray-500 text-md">
                 {new Date(msg.createdAt).toLocaleString()}

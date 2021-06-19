@@ -1,11 +1,13 @@
-import { GLOBALTYPES } from './globalTypes'
-import { postDataAPI, getDataAPI } from '../../api/fetchData'
+import { GLOBALTYPES, DeleteData } from './globalTypes'
+import { postDataAPI, getDataAPI, deleteDataAPI } from '../../api/fetchData'
 
 export const MESS_TYPES = {
     ADD_USER: 'ADD_USER',
     ADD_MESSAGE: 'ADD_MESSAGE',
     GET_CONVERSATIONS: 'GET_CONVERSATIONS',
     GET_MESSAGES: 'GET_MESSAGES',
+    UPDATE_MESSAGES: 'UPDATE_MESSAGES',
+    DELETE_MESSAGES: 'DELETE_MESSAGES',
 }
 
 export const addUser = ({user, messageReducer}) => async (dispatch) => {
@@ -52,8 +54,32 @@ export const getConversations = ({authReducer, page = 1}) => async (dispatch) =>
 export const getMessages = ({authReducer, id, page = 1}) => async (dispatch) => {
     try {
         const res = await getDataAPI(`message/${id}?limit=${page * 9}`, authReducer.token);
-        dispatch({ type: MESS_TYPES.GET_MESSAGES, payload: res.data })
+        const newData = { ...res.data, messages: res.data.messages.reverse() };
 
+        dispatch({ type: MESS_TYPES.GET_MESSAGES, payload: { ...newData, _id: id, page } });
+
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
+    }
+}
+
+export const loadMoreMessages = ({authReducer, id, page}) => async (dispatch) => {
+    try {
+        const res = await getDataAPI(`message/${id}?limit=${page * 9}`, authReducer.token);
+        const newData = { ...res.data, messages: res.data.messages.reverse() };
+
+        dispatch({ type: MESS_TYPES.UPDATE_MESSAGES, payload: { ...newData, _id: id, page } });
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
+    }
+}
+
+export const deleteMessages = ({msg, data, authReducer}) => async (dispatch) => {
+    const newData = DeleteData(data, msg._id);
+    dispatch({ type: MESS_TYPES.DELETE_MESSAGES, payload: { newData, _id: msg.recipient } })
+    
+    try {
+        await deleteDataAPI(`message/${msg._id}`, authReducer.token);
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
     }
