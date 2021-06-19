@@ -1,18 +1,18 @@
+import CircularProgress from '@material-ui/core/CircularProgress';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import NearMeIcon from '@material-ui/icons/NearMe';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { imageUpload } from '../../api/imageUpload';
 import { imageShow } from '../../api/mediaShow';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { addMessage } from '../../redux/actions/messageAction';
-
+import { addMessage, getMessages } from '../../redux/actions/messageAction';
 // import Icons from '../Icons';
 import UserCard from '../UserCard';
 import MsgDisplay from './MsgDispay';
+
 
 const RightSide = () => {
     const { authReducer, messageReducer, socketReducer } = useSelector(state => state);
@@ -77,6 +77,16 @@ const RightSide = () => {
         setLoadImage(false);
         dispatch(addMessage({ msg, authReducer, socketReducer }));
     }
+
+    useEffect(() => {
+        if (id) {
+            const getMessagesData = async () => {
+                await dispatch(getMessages({ authReducer, id }));
+            }
+
+            getMessagesData();
+        }
+    }, [dispatch, authReducer, id])
 
     return (
         <>

@@ -25,11 +25,11 @@ const UserCard = ({children, user, border, handleClose, setShowFollowers, setSho
                             {
                                 msg 
                                 ? <>
-                                    <div className="">{user.text}</div>
+                                    <div className="">{user.content}</div>
                                     {
                                         user.media.length > 0 && 
                                         <div>
-                                            {user.media.lengtth}
+                                            {user.media.length}
                                             <ImageOutlinedIcon color="primary" />
                                         </div>
                                     }

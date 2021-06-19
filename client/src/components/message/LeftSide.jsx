@@ -1,10 +1,10 @@
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { getDataAPI } from '../../api/fetchData';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { addUser } from '../../redux/actions/messageAction';
+import { addUser, getConversations } from '../../redux/actions/messageAction';
 import UserCard from '../UserCard';
 
 const LeftSide = () => {
@@ -38,6 +38,11 @@ const LeftSide = () => {
     const isActive = (user) => {
         if (id === user._id) return 'active'
     }
+
+    useEffect(() => {
+        if (messageReducer.firstLoad) return;
+        dispatch(getConversations({ authReducer }));
+    }, [authReducer, messageReducer.firstLoad, dispatch])
 
     return (
         <>
