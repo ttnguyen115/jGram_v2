@@ -1,17 +1,19 @@
-import React from 'react'
-import { useState } from 'react'
-import Carousel from '../../Carousel'
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import Carousel from '../../Carousel';
 
 const CardBody = ({post, id}) => {
+    const { themeReducer } = useSelector(state => state);
     const [readMore, setReadMore] = useState(false);
     
     return (
         <div className="">
-            {
-                post.images.length > 0 && <Carousel images={post.images} id={post._id} />
-            }
-
-            <div className="px-3 mb-1">
+            <div className="px-3 mb-1"
+                style={{
+                    filter: themeReducer ? 'invert(1)' : 'invert(0)',
+                    color: themeReducer ? 'white' : '#111'
+                }}
+            >
                 <span>
                     {
                         post.content.length < 60 
@@ -28,6 +30,10 @@ const CardBody = ({post, id}) => {
                     </span>
                 }   
             </div>
+
+            {
+                post.images.length > 0 && <Carousel images={post.images} id={post._id} />
+            }
         </div>
     )
 }

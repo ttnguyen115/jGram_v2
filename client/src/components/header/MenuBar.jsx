@@ -58,7 +58,7 @@ const MenuBar = () => {
             <ul className="flex flex-row items-center justify-around h-full navbar-nav">
                 {
                     navLinks.map((link, index) => (
-                        <li className={`px-2 nav-item ${isActive(link.path) ? 'opacity-100' : 'opacity-50'}`} key={index} >
+                        <li className={`px-2 nav-item ${isActive(link.path) ? 'opacity-100' : 'opacity-50'}`} key={index}>
                             <Link className='nav-link' to={link.path}>
                                 {link.icon}
                             </Link>

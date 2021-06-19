@@ -1,9 +1,9 @@
-import React from 'react'
+import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from './Avatar';
 
-
-const UserCard = ({children, user, border, handleClose, setShowFollowers, setShowFollowing}) => {
+const UserCard = ({children, user, border, handleClose, setShowFollowers, setShowFollowing, msg}) => {
     const handleCloseAll = () => {
         if (handleClose) handleClose();
         if (setShowFollowers) setShowFollowers(false);
@@ -20,7 +20,23 @@ const UserCard = ({children, user, border, handleClose, setShowFollowers, setSho
 
                     <div className="ml-2">
                         <span className="block">{user.username}</span>
-                        <span className="opacity-70">{user.fullname}</span>
+
+                        <span className="opacity-70">
+                            {
+                                msg 
+                                ? <>
+                                    <div className="">{user.text}</div>
+                                    {
+                                        user.media.length > 0 && 
+                                        <div>
+                                            {user.media.lengtth}
+                                            <ImageOutlinedIcon color="primary" />
+                                        </div>
+                                    }
+                                </>
+                                : user.fullname
+                            }
+                        </span>
                     </div>
                 </Link>
             </div>

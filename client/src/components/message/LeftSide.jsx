@@ -75,11 +75,10 @@ const LeftSide = () => {
                                     className={`flex items-center justify-between px-2 py-1 text-gray-500 no-underline border cursor-pointer ${isActive(user)}`} 
                                     onClick={() => handleAddUser(user)}
                                 >
-                                    <UserCard user={user}>
+                                    <UserCard user={user} msg={true}>
                                         <FiberManualRecordIcon 
                                             fontSize="small" 
                                             style={{color: 'green', fontSize: '10px'}} 
-                                            // style={{color: `${}`}} 
                                         />
                                     </UserCard>
                                 </div>

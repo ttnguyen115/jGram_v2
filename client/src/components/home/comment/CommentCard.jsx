@@ -10,7 +10,7 @@ import InputComment from '../InputComment'
 
 const CommentCard = ({children, comment, post, commentId}) => {
     const dispatch = useDispatch();
-    const { authReducer } = useSelector(state => state);
+    const { authReducer, themeReducer } = useSelector(state => state);
     
     const [content, setContent] = useState('');
     const [readMore, setReadMore] = useState(false);
@@ -78,7 +78,12 @@ const CommentCard = ({children, comment, post, commentId}) => {
             </Link>
 
             <div className="flex items-center p-2 bg-gray-200 rounded-md rounded-tl-none">
-                <div className="flex-fill">
+                <div className="flex-fill"
+                    style={{
+                        filter: themeReducer ? 'invert(1)' : 'invert(0)',
+                        color: themeReducer ? 'white' : '#111'
+                    }}
+                >
                     {
                         onEdit
                         ? <textarea rows="10" value={content} onChange={e => setContent(e.target.value)} 

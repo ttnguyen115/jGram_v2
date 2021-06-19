@@ -1,12 +1,11 @@
-import React, { useRef } from 'react'
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import { GLOBALTYPES } from '../redux/actions/globalTypes';
+import Button from '@material-ui/core/Button';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
-import Button from '@material-ui/core/Button';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { GLOBALTYPES } from '../redux/actions/globalTypes';
 import { createPost, updatePost } from '../redux/actions/postAction';
-import { useEffect } from 'react';
+// import Icons from './Icons';
 
 const StatusModal = () => {
     const { authReducer, themeReducer, statusReducer, socketReducer } = useSelector(state => state);
@@ -105,7 +104,7 @@ const StatusModal = () => {
     }, [statusReducer]);
 
     return (
-        <div className="fixed top-0 z-10 w-full h-screen overflow-auto lef-0 bg-0008">
+        <div className="fixed top-0 left-0 z-10 w-full h-screen overflow-auto bg-0008">
             <form className="w-full p-4 mx-auto my-8 bg-white rounded max-w-450px" onSubmit={handleSubmit}>
                 <div className="flex items-center justify-between pb-2.5 mb-2 border-b-2">
                     <h5 className="m-0 text-2xl font-semibold">Create Post</h5>
@@ -124,6 +123,11 @@ const StatusModal = () => {
                         className="w-full outline-none resize-none min-h-150px b-none"
                     />
 
+                    {/* <div className="flex">
+                        <div className="flex-fill"></div>
+                        <Icons setContent={setContent} content={content} />
+                    </div> */}
+
                     <div className="grid w-full py-3 overflow-x-hidden overflow-y-auto max-h-270px place-items-center grid-cols-status gap-2.5">
                         {
                             images.map((img, index) => (
@@ -135,8 +139,8 @@ const StatusModal = () => {
                                         alt="images"
                                         src={
                                             img.camera 
-                                            ? img.camera 
-                                            : img.url 
+                                            ? img.camera
+                                            : img.url
                                                 ? img.url
                                                 : URL.createObjectURL(img)
                                         }  
