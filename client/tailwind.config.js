@@ -16,8 +16,10 @@ module.exports = {
       },
 
       gridTemplateColumns: {
+        'message': 'repeat(auto-fill, minmax(70px, 1fr))',
         'status': 'repeat(auto-fill, minmax(100px, 1fr))',
         'posts': 'repeat(auto-fill, minmax(300px, 1fr))',
+        'icons': 'repeat(4, 50px)',
       },
     },
 
