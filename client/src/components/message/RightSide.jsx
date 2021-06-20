@@ -5,10 +5,11 @@ import NearMeIcon from '@material-ui/icons/NearMe';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { imageUpload } from '../../api/imageUpload';
 import { imageShow } from '../../api/mediaShow';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { addMessage, getMessages, loadMoreMessages } from '../../redux/actions/messageAction';
+import { addMessage, deleteConservation, getMessages, loadMoreMessages } from '../../redux/actions/messageAction';
 // import Icons from '../Icons';
 import UserCard from '../UserCard';
 import MsgDisplay from './MsgDispay';
@@ -19,6 +20,7 @@ const RightSide = () => {
     const { id } = useParams();
     const refDisplay = useRef();
     const pageEnd = useRef();
+    const history = useHistory();
     
     const [user, setUser] = useState([]);
     const [content, setContent] = useState('');
@@ -139,13 +141,18 @@ const RightSide = () => {
         // eslint-disable-next-line
     }, [isLoadMore]);
 
+    const handleDeleteConservation = () => {
+        dispatch(deleteConservation({ authReducer, id }));
+        return history.push('/message');
+    }
+
     return (
         <>
-            <div className="flex items-center justify-between w-full bg-gray-100 border-b h-60px">
+            <div className="flex items-center justify-between w-full bg-gray-100 border-b cursor-pointer h-60px">
                 {
                     user.length !== 0 && 
                     <UserCard user={user} >
-                        <DeleteIcon color="primary" />
+                        <DeleteIcon color="primary" onClick={handleDeleteConservation} />
                     </UserCard>
                 }
             </div>

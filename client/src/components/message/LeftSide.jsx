@@ -1,17 +1,17 @@
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { getDataAPI } from '../../api/fetchData';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
-import { addUser, getConversations } from '../../redux/actions/messageAction';
+import { getConversations, MESS_TYPES } from '../../redux/actions/messageAction';
 import UserCard from '../UserCard';
 
 const LeftSide = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const { id } = useParams();
-    const { authReducer, messageReducer } = useSelector(state => state);
+    const { authReducer, messageReducer, onlineReducer } = useSelector(state => state);
     const [search, setSearch] = useState('');
     const [searchUsers, setSearchUsers] = useState([]);
     const pageEnd = useRef();
@@ -34,8 +34,8 @@ const LeftSide = () => {
     const handleAddUser = (user) => {
         setSearch('');
         setSearchUsers([]);
-        dispatch(addUser({ user, messageReducer }));
-        // dispatch({type: MESS_TYPES.ADD_USER, payload: {...user, text: '', media: []}})
+        dispatch({ type: MESS_TYPES.ADD_USER, payload: { ...user, text: '', media: [] } });
+        dispatch({ type: MESS_TYPES.CHECK_ONLINE_OFFLINE, payload: onlineReducer });
         return history.push(`/message/${user._id}`);
     }
 
@@ -67,6 +67,13 @@ const LeftSide = () => {
             dispatch(getConversations({ authReducer, page }))
         }
     }, [dispatch, authReducer, messageReducer.resultUsers, page]);
+
+    // Check User Online - Offline
+    useEffect(() => {
+        if (messageReducer.firstLoad) {
+            dispatch({ type: MESS_TYPES.CHECK_ONLINE_OFFLINE, payload: onlineReducer })
+        }
+    }, [onlineReducer, messageReducer.firstLoad, dispatch])
 
     return (
         <>
@@ -105,10 +112,13 @@ const LeftSide = () => {
                                     onClick={() => handleAddUser(user)}
                                 >
                                     <UserCard user={user} msg={true}>
-                                        <FiberManualRecordIcon 
-                                            fontSize="small" 
-                                            style={{color: 'green', fontSize: '10px'}} 
-                                        />
+                                        {
+                                            user.online
+                                            ? <FiberManualRecordIcon fontSize="small" style={{color: 'green', fontSize: '12px'}} />
+                                            : authReducer.user.following.find(item => 
+                                                item._id === user._id
+                                            ) && <FiberManualRecordIcon fontSize="small"  style={{fontSize: '12px'}} />
+                                        }
                                     </UserCard>
                                 </div>
                             ))

@@ -8,18 +8,15 @@ export const MESS_TYPES = {
     GET_MESSAGES: 'GET_MESSAGES',
     UPDATE_MESSAGES: 'UPDATE_MESSAGES',
     DELETE_MESSAGES: 'DELETE_MESSAGES',
-}
-
-export const addUser = ({user, messageReducer}) => async (dispatch) => {
-    if (messageReducer.users.every(item => item._id !== user._id)) {
-        dispatch({ type: MESS_TYPES.ADD_USER, payload: { ...user, text: '', media: [] } })
-    }
+    DELETE_CONSERVATION: 'DELETE_CONSERVATION',
+    CHECK_ONLINE_OFFLINE: 'CHECK_ONLINE_OFFLINE',
 }
 
 export const addMessage = ({msg, authReducer, socketReducer}) => async (dispatch) => {
     dispatch({ type: MESS_TYPES.ADD_MESSAGE, payload: msg });
 
-    socketReducer.emit('addMessage', msg);
+    const { _id, avatar, fullname, username } = authReducer.user;
+    socketReducer.emit('addMessage', { ...msg, user: { _id, avatar, fullname, username } });
 
     try {
         await postDataAPI('message', msg, authReducer.token);
@@ -84,3 +81,14 @@ export const deleteMessages = ({msg, data, authReducer}) => async (dispatch) => 
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
     }
 }
+
+export const deleteConservation = ({authReducer, id}) => async (dispatch) => {
+    dispatch({ type: MESS_TYPES.DELETE_CONSERVATION, payload: id });
+    
+    try {
+        await deleteDataAPI(`conversation/${id}`, authReducer.token);
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
+    }
+}
+

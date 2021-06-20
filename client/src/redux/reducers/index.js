@@ -12,6 +12,7 @@ import suggestionsReducer from './suggestionsReducer';
 import socketReducer from './socketReducer';
 import notifyReducer from './notifyReducer';
 import messageReducer from './messageReducer';
+import onlineReducer from './onlineReducer';
 
 export default combineReducers({
     authReducer,
@@ -27,4 +28,5 @@ export default combineReducers({
     socketReducer,
     notifyReducer,
     messageReducer,
+    onlineReducer,
 })

@@ -19,13 +19,13 @@ const spawnNotifications = (body, icon, url, title) => {
 }
 
 const SocketClient = () => {
-    const { authReducer, socketReducer } = useSelector(state => state);
+    const { authReducer, socketReducer, notifyReducer, onlineReducer } = useSelector(state => state);
     const dispatch = useDispatch()
     
     // joinUser
     useEffect(() => {
-        socketReducer.emit('joinUser', authReducer.user._id);
-    }, [socketReducer, authReducer.user._id])
+        socketReducer.emit('joinUser', authReducer.user);
+    }, [socketReducer, authReducer.user])
 
     // Likes
     useEffect(() => {
@@ -105,10 +105,54 @@ const SocketClient = () => {
     // Message
     useEffect(() => {
         socketReducer.on('addMessageToClient', msg => {
-            dispatch({ type: MESS_TYPES.ADD_MESSAGE, payload: msg })
+            dispatch({ type: MESS_TYPES.ADD_MESSAGE, payload: msg });
+            dispatch({ 
+                type: MESS_TYPES.ADD_USER, 
+                payload: { 
+                    ...msg.user, 
+                    content: msg.content, 
+                    media: msg.media 
+                } 
+            });
         })
 
         return () => socketReducer.off('addMessageToClient')
+    }, [socketReducer, dispatch])
+
+    //  Check Online/Offline
+    useEffect(() => {
+        socketReducer.emit('checkUserOnline', authReducer.user);
+    }, [socketReducer, authReducer.user])
+
+    useEffect(() => {
+        socketReducer.on('checkUserOnlineToMe', data => {
+            data.forEach(item => {
+                if (!onlineReducer.includes(item.id)) {
+                    dispatch({ type: GLOBALTYPES.ONLINE, payload: item.id });
+                }
+            })
+        })
+
+        return () => socketReducer.off('checkUserOnlineToMe')
+    }, [socketReducer, dispatch, onlineReducer])
+    
+    useEffect(() => {
+        socketReducer.on('checkUserOnlineToClient', id => {
+            if (!onlineReducer.includes(id)) {
+                dispatch({ type: GLOBALTYPES.ONLINE, payload: id });
+            }
+        })
+
+        return () => socketReducer.off('checkUserOnlineToClient')
+    }, [socketReducer, dispatch, onlineReducer])
+    
+    // Check user ofline
+    useEffect(() => {
+        socketReducer.on('CheckUserOffline', id => {
+            dispatch({ type: GLOBALTYPES.OFFLINE, payload: id });
+        })
+
+        return () => socketReducer.off('CheckUserOffline')
     }, [socketReducer, dispatch])
 
     return <>

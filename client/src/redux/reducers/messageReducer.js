@@ -1,5 +1,5 @@
 import { MESS_TYPES } from "../actions/messageAction";
-import { EditData } from "../actions/globalTypes";
+import { EditData, DeleteData } from "../actions/globalTypes";
 
 const initialState = {
     users: [],
@@ -11,11 +11,14 @@ const initialState = {
 const messageReducer = (state = initialState, action) => {
     switch (action.type) {
         case MESS_TYPES.ADD_USER:
-            return {
-                ...state,
-                users: [action.payload, ...state.users]
+            if (state.users.every(item => item._id !== action.payload._id)) {
+                return {
+                    ...state,
+                    users: [action.payload, ...state.users]
+                }
             }
-        
+            return state;
+
         case MESS_TYPES.ADD_MESSAGE:
             return {
                 ...state,
@@ -62,6 +65,23 @@ const messageReducer = (state = initialState, action) => {
                     item._id === action.payload._id
                     ? { ...item, messages: action.payload.newData }
                     : item
+                )
+            }
+        
+        case MESS_TYPES.DELETE_CONSERVATION:
+            return {
+                ...state,
+                users: DeleteData(state.users, action.payload),
+                data: DeleteData(state.data, action.payload),
+            }
+        
+        case MESS_TYPES.CHECK_ONLINE_OFFLINE:
+            return {
+                ...state,
+                users: state.users.map(user => 
+                    action.payload.includes(user._id)
+                    ? { ...user, online: true }
+                    : { ...user, online: false }
                 )
             }
     
