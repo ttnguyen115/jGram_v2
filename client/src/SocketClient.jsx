@@ -19,7 +19,7 @@ const spawnNotifications = (body, icon, url, title) => {
 }
 
 const SocketClient = () => {
-    const { authReducer, socketReducer, notifyReducer, onlineReducer } = useSelector(state => state);
+    const { authReducer, socketReducer, onlineReducer } = useSelector(state => state);
     const dispatch = useDispatch()
     
     // joinUser

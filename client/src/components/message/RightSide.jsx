@@ -142,8 +142,10 @@ const RightSide = () => {
     }, [isLoadMore]);
 
     const handleDeleteConservation = () => {
-        dispatch(deleteConservation({ authReducer, id }));
-        return history.push('/message');
+        if (window.confirm('Do you want to delete this conversation?')) {
+            dispatch(deleteConservation({ authReducer, id }));
+            return history.push('/message');
+        }
     }
 
     return (

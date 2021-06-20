@@ -10,7 +10,9 @@ const MsgDisplay = ({user, msg, data}) => {
     const { authReducer } = useSelector(state => state);
 
     const handleDeleteMessages = () => {
-        if (data) {
+        if (!data) return;
+        
+        if (window.confirm('Do you want to delete this message?')) {
             dispatch(deleteMessages({ msg, data, authReducer }))
         }
     }

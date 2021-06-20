@@ -3,10 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 import Avatar from '../Avatar';
 import FollowBtn from '../FollowBtn';
+import MessageBtn from '../message/MessageBtn';
 import EditProfile from './EditProfile';
 import Followers from './Followers';
 import Following from './Following';
-import Setting from '../header/Setting';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { Link } from 'react-router-dom';
+import { logout } from '../../redux/actions/authAction';
 
 const Info = ({id, authReducer, profileReducer, dispatch}) => {
     const [userData, setUserData] = useState([]);
@@ -30,7 +33,7 @@ const Info = ({id, authReducer, profileReducer, dispatch}) => {
             dispatch({ type: GLOBALTYPES.MODAL, payload: false })
         }
     }, [showFollowers, showFollowing, onEdit, dispatch])
-    
+
     return (
         <div className="w-full px-3 py-5 m-auto max-w-800px">
             {
@@ -38,17 +41,23 @@ const Info = ({id, authReducer, profileReducer, dispatch}) => {
                     <div className="flex flex-wrap justify-around" key={user._id}>
                         <Avatar src={user.avatar} border="border" size={2} />
                         
-                        <div className="flex-1 w-full mx-4 min-w-250px max-w-500px opacity-70">
+                        <div className="flex-1 w-full m-4 min-w-250px max-w-500px opacity-70">
                             <div className="flex flex-wrap items-center">
                                 <h2 className="text-3xl font-semibold flex-3">{user.username}</h2>
                                 {
                                     user._id === authReducer.user._id
                                     ? <Button className="flex-2" variant="contained" color="primary" onClick={() => setOnEdit(true)} >Edit Profile</Button>
-                                    : <FollowBtn user={user} />
+                                    : <>
+                                        <FollowBtn user={user} />
+                                        <MessageBtn user={user} />
+                                    </>
                                 }
                                 
                                 {
-                                    user._id === authReducer.user._id && <Setting className="cursor-pointer" />
+                                    user._id === authReducer.user._id && 
+                                    <Link className="mx-2" to="/" onClick={() => dispatch(logout())} >
+                                        <ExitToAppIcon fontSize="large" />
+                                    </Link>
                                 }
                             </div>
 

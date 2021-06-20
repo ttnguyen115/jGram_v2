@@ -6,7 +6,7 @@ const Conversation = () => {
     return (
         <div className="flex w-full mt-4 border rounded-md bg-gray-50" 
             style={{height: 'calc(100vh - 200px)'}}>
-            <div className="px-0 col-md-4 border-right">
+            <div className="hidden px-0 col-md-4 border-right md:block">
                 <LeftSide />
             </div>
             

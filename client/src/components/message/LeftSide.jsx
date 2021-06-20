@@ -7,7 +7,7 @@ import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 import { getConversations, MESS_TYPES } from '../../redux/actions/messageAction';
 import UserCard from '../UserCard';
 
-const LeftSide = () => {
+const LeftSide = ({user}) => {
     const history = useHistory();
     const dispatch = useDispatch();
     const { id } = useParams();

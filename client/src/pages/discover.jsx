@@ -43,12 +43,13 @@ const Discover = () => {
             <div className="my-2 text-center opacity-50">
                 <a href="https://jettprofile.vercel.app/" target="_blank" rel="noreferrer"
                     className="text-blue-500 hover:underline"
+                    
                 >
                     https://jettprofile.vercel.app/
                 </a>
 
                 <small className="block">
-                    Welcome to my big project  
+                    Welcome to my social network project!  
                 </small>
                 
                 <small>

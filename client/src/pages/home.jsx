@@ -9,7 +9,7 @@ const Home = () => {
 
     return (
         <div className="grid mx-0 home row">
-            <div className="col-md-8">
+            <div className="col-12">
                 <Status />
 
                 {

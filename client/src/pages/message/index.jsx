@@ -10,7 +10,7 @@ const Message = () => {
                 <LeftSide />
             </div>
             
-            <div className="px-0 col-md-8">
+            <div className="hidden px-0 col-md-8 md:block">
                 <div className="flex flex-col items-center justify-center h-full">
                     <ChatBubbleOutlineIcon fontSize="large" />
                     <h2 className="text-3xl">Message</h2>
